@@ -1,0 +1,10 @@
+TIA portal setting
+
+
+1) CPU
+  - Protection (Full access)
+  - Check (permit access with PUT/GET comm)
+  
+
+2) Datablock to be access
+  - Go properties >  Attributes > uncheck optimized block access

@@ -1,0 +1,9 @@
+Robot IP: 192.168.100.2
+Motor Controller Port: COM5
+Input Controller IP: 192.168.1.100
+PLC IP : 192.168.0.5
+Fullscreen: '1'
+Theme Color: BlueGray
+Theme Style: Dark
+Password: 'aetec'
+Username : 'aetec'

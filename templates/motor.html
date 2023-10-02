@@ -1,0 +1,17 @@
+{% extends "layout.html" %}
+
+{% block title %} ThermoReader {% endblock %}
+
+{% block content %}
+   <h2> Robot Variables </h2>
+    <form action="/" method="get">
+       <input type="submit" name="navigate" value="Back" >
+
+    </form>
+        {% for i in motor %}
+        <ul>
+            {{ i }}: {{ motor[i] }}
+        </ul>
+        {% endfor %}
+
+{% endblock %}

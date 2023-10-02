@@ -1,0 +1,2658 @@
+#:import get_color_from_hex kivy.utils.get_color_from_hex
+#:import MDLabel kivymd.uix.label
+#:import Label kivy.core.text.Label
+#:import MDSmartTile kivymd.uix.imagelist
+#:import VideoPlayer kivy.uix.videoplayer
+#:import FocusBehavior,HoverBehavior kivy.uix.behaviors
+
+#:import OS os
+#:set LogoDir app.logo
+#:set progress_label Label()
+#:set RedText [195/255,46/255,39/255,1]
+
+MDBoxLayout:
+    orientation: "vertical"
+    MDTopAppBar:
+        id: toolbar
+        pos_hint: {"top": 1}
+        title: app.machine_name + ' - Login'
+        elevation : 20
+        right_action_items: [['logout',lambda x : app.log_out()],['cog',lambda x : app.enter_settings()],["power", lambda x: app.shut_down(x)]]
+        left_action_items: [["menu", lambda x: app.call_menu(x)]]
+
+    ScreenManager:
+        id: screen_manager
+
+        LoginScreen:
+            id : login_screen
+            name: 'Login'
+        OperationScreen:
+            id: operation_screen
+            name : 'Operation'
+        IOScreen:
+            id: io_screen
+            name : 'IO Control'
+        TuningScreen:
+            id: tuning_screen
+            name : 'Tuning'
+        TestScreen:
+            id : test_screen
+            name : 'Tests'
+
+<LoginScreen>
+    MDFloatLayout:
+        id : bck_img
+        canvas.before:
+            Color :
+                rgba:  (255/255,1/255,1/255,1)
+            Rectangle:
+                pos: self.pos
+                size: self.size
+                source: 'img/logo.png'
+        MDCard:
+            md_bg_color: app.theme_cls.bg_dark
+            size_hint : None, None
+            size: 500,450
+            pos_hint : {'center_x': 0.5, 'center_y': 0.5}
+            elevation : 10
+            padding :25
+            spacing : 25
+            orientation : 'vertical'
+            MDLabel:
+                text: ' WELCOME'
+                font_size : 40
+                halign : 'center'
+                size_hint_y: None
+                height : self.texture_size[1]
+            MDTextField:
+                id : user
+                mode : 'round'
+                hint_text: ' username'
+                icon_right : 'account'
+                write_tab : False
+                size_hint_x : None
+                width : 300
+                font_size : 20
+                pos_hint : {'center_x':0.5}
+            PasswordTextFieldButton:
+                id: password_widget
+                size_hint_x: None
+                width : 300
+                hint_text: "password"
+                pos_hint: {"center_x": .5, "center_y": .5}
+            MDRoundFlatButton:
+                text : 'LOG IN'
+                text_color : 'white'
+                font_size : 20
+                pos_hint : {'center_x':0.5}
+                on_release : root.log_in()
+            MDRoundFlatButton:
+                text : 'CLEAR'
+                text_color : 'white'
+                font_size : 20
+                pos_hint : {'center_x':0.5}
+                on_release : root.clear()
+
+<OperationScreen>
+    MDFloatLayout:
+        id:main
+
+        canvas:
+            Color:
+                rgba: (0.3,0.3,0.3,1)
+            Line:
+                points : [self.width*0.7, self.height*0.02, self.width*0.7, self.height*0.98]
+                width : 1
+            Line:
+                points : [self.width*0.73, self.height*0.78, self.width*0.98, self.height*0.78]
+                width : 1
+            Line:
+                points : [self.width*0.73, self.height*0.21, self.width*0.98, self.height*0.21]
+                width : 1
+#    BackGroundImage:
+
+        MDBoxLayout:
+            #dummy graphics to load image
+            canvas.before:
+                Color :
+                    rgba : 1,1,1,1
+                Rectangle :
+                    pos : (0,0)
+                    size : (1,1)
+                    source : app.view
+
+        #operation view tab
+        MDTabs:
+            tab_hint_x : True
+            size_hint: (0.65,0.2)
+            pos_hint : {'x':0.02,'y':0.78}
+            background_color : app.theme_cls.bg_normal
+            indicator_color : app.theme_cls.primary_color
+#            text_color_normal : get_color_from_hex('#000000')
+#            underline_color : get_color_from_hex('#000000')
+            lock_swiping : True
+            AppTab:
+                name : 'Operation Status'
+                title : 'Operation Status'
+                padding : 8
+                md_bg_color: app.theme_cls.bg_dark
+                radius: 10
+                MDBoxLayout:
+                    orientation : 'horizontal'
+                    MDGridLayout:
+                        padding : 1
+                        cols : 3
+                        MDLabel :
+                            text : 'Operation Status'
+                            bold : True
+                            size_hint_x : 1.0
+                        MDLabel :
+                            text : ':'
+                            size_hint_x : 0.2
+                        MDLabel :
+                            id : operation_status
+                            text : 'Idle'
+                            theme_text_color : 'Custom'
+                            text_color : app.theme_cls.text_color
+                        MDLabel :
+                            text : 'Selected Recipe'
+                            bold : True
+                            size_hint_x : 1.0
+                        MDLabel :
+                            text : ':'
+                            size_hint_x : 0.2
+                        MDLabel :
+                            id : recipe_selected
+                            text : 'NA'
+                            theme_text_color : 'Custom'
+                            text_color : app.theme_cls.text_color
+                        MDLabel :
+                            text : 'test'
+                            bold : True
+                            size_hint_x : 1.0
+                        MDLabel :
+                            text : ':'
+                            size_hint_x : 0.2
+                        MDLabel :
+                            id : tesss
+                            text : 'NA'
+                            theme_text_color : 'Custom'
+                            text_color : app.theme_cls.text_color
+            AppTab:
+                name : 'Others'
+                title : 'Others'
+                padding : 8
+                md_bg_color: app.theme_cls.bg_dark
+                radius: 10
+                MDBoxLayout:
+                    orientation : 'horizontal'
+                    MDGridLayout:
+                        padding : 1
+                        cols : 3
+                        MDLabel:
+
+#        MDBoxLayout:
+#            #operation view tab
+#            orientation : 'vertical'
+#            size_hint: (0.6,0.2)
+#            pos_hint : {'x':0.02,'y':0.83}
+#            spacing : 8
+#            MDBoxLayout:
+#                orientation : 'horizontal'
+#                Title:
+#                    text : 'Operation Status'
+#                    adaptive_height : True
+#            MDGridLayout:
+#                spacing: 8
+#                cols : 3
+#                MDGridLayout:
+#                    padding : 1
+#                    cols : 3
+#                    MDLabel :
+#                        text : 'Operation Status'
+#                        bold : True
+#                        size_hint_x : 1.0
+#                    MDLabel :
+#                        text : ':'
+#                        size_hint_x : 0.2
+#                    MDLabel :
+#                        id : operation_status
+#                        text : 'Idle'
+#                        theme_text_color : 'Custom'
+#                        text_color : app.theme_cls.text_color
+#                    MDLabel :
+#                        text : 'Selected Recipe'
+#                        bold : True
+#                        size_hint_x : 1.0
+#                    MDLabel :
+#                        text : ':'
+#                        size_hint_x : 0.2
+#                    MDLabel :
+#                        id : recipe_selected
+#                        text : 'NA'
+#                        theme_text_color : 'Custom'
+#                        text_color : app.theme_cls.text_color
+
+        MDBoxLayout:
+            orientation : 'horizontal'
+            size_hint: (0.60,0.54)
+            pos_hint : {'x':0.015,'y':0.47}
+            MDBoxLayout :
+                orientation : 'vertical'
+                spacing : 8
+                TooltipMDRoundFlatIconButton:
+                    text : 'Table'
+                    icon: 'play-circle-outline'
+                    font_size : 17
+                    pos_hint : {'center_y' : 0.5}
+                    on_release : root.open_tabledialog()
+                TooltipMDRoundFlatIconButton:
+                    text : 'reload'
+                    icon : 'update'
+                    font_size : 17
+                    pos_hint : {'center_y' : 0.5}
+                    on_release : root.restock()
+                MDFillRoundFlatIconButton:
+                    icon : 'read'
+                    icon_size : '24sp'
+                    text : 'Read PLC'
+                    font_size : 17
+                    pos_hint : {'center_y' : 0.5}
+                    on_release : root.read_data()
+
+#       # tabs for circular porgress bar layout
+        MDTabs:
+            tab_hint_x : True
+            size_hint: (0.54,0.56)
+            pos_hint : {'x':0.130,'y':0.21}
+            background_color : app.theme_cls.bg_normal
+            indicator_color : app.theme_cls.primary_color
+            lock_swiping : True
+            AppTab:
+                name : 'Ink Stock'
+                title : 'Ink Stock'
+                padding : 16
+                md_bg_color: app.theme_cls.bg_dark
+                radius: 10
+                MDBoxLayout:
+                    MDGridLayout:
+                        spacing : 8
+                        rows : 1
+                        cols : 6
+                        MDBoxLayout:
+                            padding : 12
+                            CircularProgressBarMagenta:
+                                size_hint : None,None
+                                size : 100,100
+                                id : magenta
+                        MDBoxLayout:
+                            padding : 12
+                            CircularProgressBarCyan:
+                                size_hint : None,None
+                                size : 100,100
+                                id: cyan
+                        MDBoxLayout:
+                            padding : 12
+                            CircularProgressBarYellow:
+                                size_hint : None,None
+                                size : 100,100
+                                id: yellow
+                        MDBoxLayout:
+                            padding : 12
+                            CircularProgressBarBlack1:
+                                size_hint : None,None
+                                size : 100,100
+                                id: black1
+                        MDBoxLayout:
+                            padding : 12
+                            CircularProgressBarBlack2:
+                                size_hint : None,None
+                                size : 100,100
+                                id: black2
+                        MDBoxLayout:
+                            padding : 12
+                            CircularProgressBarPhotoBlack:
+                                size_hint : None,None
+                                size : 100,100
+                                id : photoblack
+                MDBoxLayout:
+                    MDBoxLayout:
+                        orientation: 'horizontal'
+                        MDBoxLayout:
+                            orientation: 'vertical'
+                            padding: 10
+                            MDLabel:
+                                text: 'X offset'
+                                halign : 'center'
+                            MDTextField:
+                                id : x_off_field
+                                text:
+                                mode : 'round'
+                                write_tab : False
+                                input_filter : 'int'
+                        MDBoxLayout:
+                            orientation: 'vertical'
+                            padding: 10
+                            MDLabel:
+                                text: 'Y offset'
+                                halign : 'center'
+                            MDTextField:
+                                id : y_off_field
+                                text:
+                                mode : 'round'
+                                write_tab : False
+                                input_filter : 'int'
+                        MDBoxLayout:
+                            orientation: 'vertical'
+                            padding: 10
+                            MDLabel:
+                                text: 'Z offset'
+                                halign : 'center'
+                            MDTextField:
+                                id : z_off_field
+                                text:
+                                mode : 'round'
+                                write_tab : False
+                                input_filter : 'int'
+                    MDRoundFlatIconButton:
+                        icon : 'send'
+                        text : 'Send'
+                        font_size : 17
+                        pos_hint : {'center_y' : 0.5}
+                        on_release : root.send_data()
+                MDBoxLayout:
+                    MDBoxLayout:
+                        orientation: 'horizontal'
+                        MDBoxLayout:
+                            orientation: 'vertical'
+                            padding: 10
+                            MDLabel:
+                                text: 'X real'
+                                halign : 'center'
+                            MDTextField:
+                                id : x_off_fieldr
+                                text:
+                                mode : 'round'
+                                write_tab : False
+                                input_filter : 'float'
+                        MDBoxLayout:
+                            orientation: 'vertical'
+                            padding: 10
+                            MDLabel:
+                                text: 'Y real'
+                                halign : 'center'
+                            MDTextField:
+                                id : y_off_fieldr
+                                text:
+                                mode : 'round'
+                                write_tab : False
+                                input_filter : 'float'
+                        MDBoxLayout:
+                            orientation: 'vertical'
+                            padding: 10
+                            MDLabel:
+                                text: 'Z real'
+                                halign : 'center'
+                            MDTextField:
+                                id : z_off_fieldr
+                                text:
+                                mode : 'round'
+                                write_tab : False
+                                input_filter : 'float'
+                    MDRoundFlatIconButton:
+                        icon : 'send-outline'
+                        text : 'Send'
+                        font_size : 17
+                        pos_hint : {'center_y' : 0.5}
+                        on_release : root.send_real()
+
+                MDBoxLayout:
+            AppTab:
+                name : 'Oven'
+                title : 'Oven'
+                padding : 16
+                md_bg_color: app.theme_cls.bg_dark
+                radius: 10
+                MDBoxLayout:
+                    orientation : 'vertical'
+                    padding : 8
+                    spacing : 14
+                    size_hint: (0.30,0.26)
+                    pos_hint : {'x':0.115,'y':0.21}
+#                    MDBoxLayout:
+#                        id : box_anim
+#                        orientation: 'vertical'
+#                        size : 100,100
+#                        md_bg_color : get_color_from_hex('#35A92D')
+#                    MDBoxLayout:
+#                        id : box_anim1
+#                        orientation: 'vertical'
+#                        size : 100,100
+#                        md_bg_color : get_color_from_hex('#35A92D')
+#                    MDBoxLayout:
+#                        id : box_anim2
+#                        orientation: 'vertical'
+#                        size : 100,100
+#                        md_bg_color : get_color_from_hex('#35A92D')
+#                    MDBoxLayout:
+#                        orientation : 'horizontal'
+#                        canvas:
+#                            Color :
+#                                rgba:  (255/255,123/255,0/255,1)
+#                            Rectangle:
+#                                pos: self.pos
+#                                size: self.size
+#                                source: 'img/logo.png'
+#                        MDRoundFlatIconButton:
+#                            icon : 'alert-rhombus'
+#                            text: 'stop check'
+#                            on_release : root.set_bar_value()
+
+            AppTab:
+                name : 'Palletizing'
+                title : 'Palletizing'
+                padding : 16
+                md_bg_color: app.theme_cls.bg_dark
+                radius: 10
+                MDBoxLayout:
+                    MDGridLayout :
+                        id : outgoing_grid
+                        spacing : 6
+                        cols : 1
+                        rows : 1
+
+###        MDBoxLayout:
+###            orientation: 'vertical'
+###            size_hint: (0.05,0.25)
+###            pos_hint : {'x':0.62,'y':0.22}
+###            spacing : 16
+###            MDFlatButton:
+###                text:'pick blade'
+###                on_release: root.incoming_status_update()
+###            MDFlatButton:
+###                text:'pass blade'
+###                on_release: root.completed_status_update()
+###            MDCheckbox:
+###                id: toggle_pf
+###                on_active : root.toggle_pass_fail()
+##
+##        # Indicator
+##        MDBoxLayout:
+##            orientation: 'vertical'
+##            size_hint: (0.05,0.25)
+##            pos_hint : {'x':0.62,'y':0.21}
+##            spacing : 16
+##            LegendLayout:
+##                md_bg_color : get_color_from_hex('#8cd9b3')
+##                id : legend_1
+##                MDLabel :
+##                    halign : 'center'
+##                    text : 'Occupied'
+##                    bold : True
+##                    font_size : 17
+##            LegendLayout:
+##                md_bg_color : get_color_from_hex('#FF1300')
+##                id : legend_2
+##                MDLabel :
+##                    halign : 'center'
+##                    text : 'Failed'
+##                    bold : True
+##                    font_size : 17
+##            LegendLayout:
+##                md_bg_color : get_color_from_hex('#4e6a8a')
+##                id : legend_3
+##                MDLabel :
+##                    halign : 'center'
+##                    text : 'Empty'
+##                    bold : True
+##                    font_size : 17
+##            MyToggleButton :
+##                text : 'Legend'
+##                id : legend_button
+##                on_release : root.toggle_legend(self)
+##                size_hint_x : 1
+        #Connection Box
+        MDBoxLayout:
+            size_hint: (0.25,0.03)
+            pos_hint : {'x':0.73,'y':0.95}
+            id : connect_box
+            Title:
+                text : 'System Initialization'
+        MDBoxLayout:
+            size_hint: (0.25,0.05)
+            pos_hint : {'x':0.73,'y':0.87}
+            Subtitle:
+                text : 'System Status :'
+            MDLabel:
+                text : 'Not Ready'
+                theme_text_color: 'Custom'
+                text_color : app.theme_cls.error_color
+                id : system_status
+            TooltipMDRoundFlatIconButton:
+                text : 'View Connections'
+                icon: 'lan-connect'
+                font_size : 17
+                icon_size : '26dp'
+                pos_hint : {'center_y' : 0.5}
+                on_release : root.connect_button()
+
+        MDBoxLayout:
+            orientation : 'vertical'
+            size_hint: (0.25,0.5)
+            pos_hint : {'x':0.73,'y':0.26}
+            MDBoxLayout:
+                size_hint_y : 0.1
+                Title:
+                    text : 'Operation Control'
+            MDBoxLayout:
+                padding : 8
+                orientation : 'vertical'
+                MDBoxLayout:
+                    size_hint_y: 0.6
+                    orientation : 'horizontal'
+                    spacing : 12
+                    Subtitle:
+                        text : 'Modify Config'
+                        size_hint_x : None
+                        width : 200
+
+#                    ToolTipMDFloatingActionButton:
+#                        icon : 'keyboard'
+#                        pos_hint : {'center_y' : 0.5}
+#                        on_release: root.configure_motor()
+#                        md_bg_color: [app.theme_cls.primary_color[0],app.theme_cls.primary_color[1],app.theme_cls.primary_color[2],0.2]
+#                        tooltip_text : 'Edit'
+#
+#                    ToolTipMDFloatingActionButton:
+#                        icon : 'content-save-edit-outline'
+#                        pos_hint : {'center_y' : 0.5}
+#                        on_release: root.edit_motor_dist()
+#                        md_bg_color: [app.theme_cls.primary_color[0],app.theme_cls.primary_color[1],app.theme_cls.primary_color[2],0.2]
+#                        tooltip_text : 'Edit'
+
+                MDBoxLayout:
+                    spacing : 32
+                    MDBoxLayout:
+                        orientation : 'vertical'
+                        pos_hint: {"center_x": .5}
+                        TooltipMDIconButton:
+                            icon: "play-circle-outline"
+                            icon_size: "120sp"
+                            pos_hint: {"center_x": .5}
+                            theme_icon_color: "Custom"
+                            icon_color: get_color_from_hex('#00aa00')
+                            id : start_button
+                            on_release : root.start_button()
+
+                        MDLabel:
+                            text : 'Start'
+                            halign : 'center'
+                            bold : True
+                            id : start_label
+                            theme_text_color: "Custom"
+                            text_color: get_color_from_hex('#00aa00')
+
+                    MDBoxLayout:
+                        orientation : 'vertical'
+                        pos_hint: {"center_x": .5}
+                        TooltipMDIconButton:
+                            icon: "stop-circle-outline"
+                            icon_size: "120sp"
+                            id : stop_button
+                            pos_hint: {"center_x": .5}
+                            theme_icon_color: "Custom"
+                            icon_color: app.theme_cls.error_color
+                            on_release : root.stop_button()
+
+                        MDLabel:
+                            text : 'Stop'
+                            halign : 'center'
+                            bold : True
+                            id : stop_label
+                            theme_text_color : "Error"
+#                MDBoxLayout:
+#                    size_hint_y : 0.7
+#                    MDLabel:
+#                        text : f'[b]Robot Speed[/b] : {speed_slider.value}%'
+#                        id : robot_speed
+#                        markup : True
+#                    MDIcon:
+#                        icon: "walk"
+#                        pos_hint : {"center_x" : 0.5 , "center_y" : 0.5}
+#                        icon_size: "40sp"
+#                    MDSlider:
+#                        min : 1
+#                        max : 100
+#                        value : 100
+#                        step : 1
+#                        pos_hint : {"center_x" : 0.5 , "center_y" : 0.5}
+#                        color: app.theme_cls.primary_light
+#                        id : speed_slider
+#                        on_touch_up : root.change_speed()
+#                    MDIcon:
+#                        icon: "run-fast"
+#                        pos_hint : {"center_x" : 0.5 , "center_y" : 0.5}
+#                        icon_size: "40sp"
+#                MDBoxLayout:
+#                    size_hint_y : 0.8
+#                    ScrollView:
+#                        do_scroll_x: True
+#                        do_scroll_y: True
+#                        scroll_type : ['bars','content']
+#                        MDGridLayout:
+#                            id: box
+#                            cols: 1
+#                            adaptive_height: True
+
+        MDBoxLayout:
+            orientation : 'vertical'
+            size_hint: (0.6,0.17)
+            pos_hint : {'x':0.015,'y':0.01}
+            Title:
+                text : 'Operation Log'
+                size_hint_y : 0.25
+            MDBoxLayout:
+                orientation : 'horizontal'
+                spacing : 8
+                md_bg_color: app.theme_cls.bg_dark
+                radius: 10
+                ScrollView:
+                    do_scroll_x: True
+                    do_scroll_y: True
+                    bar_inactive_color : [0,0,0,0]
+                    bar_color : [0.3,0.3,0.3,1]
+                    bar_width : 8
+                    scroll_type : ['bars','content']
+                    id : message_log
+
+                    MDGridLayout:
+                        id: log_label
+                        cols: 1
+                        size_hint_y : None
+                        height: self.minimum_height
+
+
+        MDBoxLayout:
+            size_hint: (0.05,0.15)
+            pos_hint : {'x':0.62,'y':0.01}
+            orientation : 'vertical'
+            MDBoxLayout:
+                orientation : 'vertical'
+                MDLabel:
+                MDCheckbox:
+                    id : auto_scroll
+                    active : 1
+                    theme_icon_color: "Custom"
+                    color_active : app.theme_cls.primary_light
+                MDLabel:
+                    text: 'Autoscroll'
+                    size_hint_y : 0.2
+                    font_size: 13
+                    halign: "center"
+
+            MDBoxLayout:
+                padding : [6,0]
+                TooltipMDRoundFlatIconButton:
+                    on_release : root.clear_log()
+                    icon : 'delete'
+                    text : 'Clear'
+
+##        MDBoxLayout:
+##            orientation : 'vertical'
+##            size_hint: (0.25,0.13)
+##            pos_hint : {'x':0.73,'y':0.06}
+##            Title:
+##                text : 'Error Management'
+##                size_hint_y : 0.3
+##            MDBoxLayout:
+##                padding : 8
+##                spacing : 16
+##                TooltipMDRoundFlatIconButton:
+##                    text : 'Recent Error'
+##                    icon : 'exclamation-thick'
+##                    pos_hint : {'center_y' : 0.5}
+##                    font_size : 17
+##                    on_release: root.recent_error()
+##
+##                TooltipMDRoundFlatIconButton:
+##                    text : ' Move Recovery'
+##                    icon : 'wrench'
+##                    pos_hint : {'center_y' : 0.5}
+##                    font_size : 17
+##                    on_release : root.enter_recovery()
+##                MDLabel:
+#        LogoLayout:
+
+<IOScreen>
+    MDFloatLayout:
+        id:main
+
+        MDBoxLayout:
+            #operation view tab
+            orientation : 'vertical'
+            size_hint: (0.25,0.08)
+            pos_hint : {'x':0.015,'y':0.945}
+            Title:
+                text : 'IO Control'
+                adaptive_height : True
+                valign : 'top'
+        MDBoxLayout:
+            #operation view tab
+            orientation : 'vertical'
+            size_hint: (0.25,0.08)
+            pos_hint : {'x':0.945,'y':0.915}
+            TooltipMDIconButton:
+                icon: "stop-circle-outline"
+                icon_size: "64sp"
+#                pos_hint: {"center_x": .5}
+                theme_icon_color: "Custom"
+                icon_color: app.theme_cls.error_color
+                on_release : root.stop_all()
+
+        MDTabs:
+            size_hint: (0.97,0.85)
+            pos_hint : {'x':0.015,'y':0.07}
+            background_color : app.theme_cls.bg_normal
+            indicator_color : app.theme_cls.primary_color
+            tab_hint_x : True
+            lock_swiping :True
+
+            AppTab:
+                name : 'Motor Control'
+                title : 'Motor Control'
+                md_bg_color: app.theme_cls.bg_dark
+                radius: 10
+                MDBoxLayout:
+                    orientation: 'vertical'
+                    padding : [32, 0]
+                    MDGridLayout :
+                        cols : 3
+                        rows : 2
+                        MDBoxLayout:
+                            orientation : 'vertical'
+                            padding: 10
+                            spacing: 10
+                            MDBoxLayout:
+                                orientation: 'vertical'
+                                spacing: 10
+                                MDLabel:
+                                    text: 'L1 Motor (1)'
+                                    bold : True
+                                    font_size: 20
+                            MDSeparator:
+                            MDBoxLayout:
+                                spacing: 10
+                                padding : 6
+                                orientation: 'horizontal'
+                                MDLabel:
+                                MDRoundFlatIconButton:
+                                    text : 'Move'
+                                    icon : 'play-circle-outline'
+                                    icon_size : '24sp'
+                                    font_size : 17
+                                    on_release : root.oven_motor_on()
+
+                                MDRoundFlatIconButton:
+                                    text : 'Stop'
+                                    icon : 'stop-circle-outline'
+                                    icon_size : '24sp'
+                                    font_size : 17
+                                    on_release : root.oven_motor_off()
+                                MDLabel:
+                            MDBoxLayout:
+                                spacing : 10
+                                MDGridLayout:
+                                    cols: 2
+                                    MDLabel:
+                                        text: 'Forward'
+                                        font_size: 17
+                                    MDCheckbox:
+                                        group: 'fr'
+                                        active : True
+                                        on_active : root.oven_toggle_forward_reversed(0)
+                                        theme_icon_color: "Custom"
+                                        color_active : app.theme_cls.primary_light
+                                MDGridLayout:
+                                    cols: 2
+                                    MDLabel:
+                                        text: 'Reverse'
+                                        font_size: 17
+                                    MDCheckbox:
+                                        group: 'fr'
+                                        on_active : root.oven_toggle_forward_reversed(1)
+                                        theme_icon_color: "Custom"
+                                        color_active : app.theme_cls.primary_light
+                            MDBoxLayout:
+                                orientation: 'horizontal'
+                                spacing : 10
+                                MDLabel:
+                                    text:'Steps'
+                                    font_size: 17
+                                MDCheckbox:
+                                    on_active : root.oven_move_by_steps()
+                                    theme_icon_color: "Custom"
+                                    color_active : app.theme_cls.primary_light
+                                    id : move_step
+                                MDLabel:
+                                MDLabel:
+                            MDBoxLayout:
+                                orientation: 'horizontal'
+                                spacing : 10
+                                MDTextField:
+                                    id : motor_steps
+                                    hint_text : 'steps to move (range 1-3000)'
+                                    input_filter : 'int'
+
+                            MDBoxLayout:
+                                spacing : 10
+                                MDLabel:
+                                    markup : True
+                                    text : f'Motor Speed : {speed_slider_motor.value}%'
+                                    id : motor_speed
+                                    halign : 'center'
+                                    font_size: 17
+                                MDIcon:
+                                    icon: "walk"
+                                    pos_hint : {"center_x" : 0.5 , "center_y" : 0.5}
+                                    icon_size: "30sp"
+                                MDSlider:
+                                    min : 1
+                                    max : 100
+                                    value : 70
+                                    color: app.theme_cls.primary_light
+                                    id : speed_slider_motor
+                                    on_value : root.oven_change_motor_speed()
+                                MDIcon:
+                                    icon: "run-fast"
+                                    pos_hint : {"center_x" : 0.5 , "center_y" : 0.5}
+                                    icon_size: "30sp"
+                        MDBoxLayout:
+                            orientation : 'vertical'
+                            padding: 10
+                            spacing: 10
+                            MDBoxLayout:
+                                orientation: 'vertical'
+                                spacing: 10
+                                MDLabel:
+                                    text: 'R1 Motor (2)'
+                                    bold : True
+                                    font_size: 20
+                            MDSeparator:
+                            MDBoxLayout:
+                                orientation: 'horizontal'
+                                spacing: 10
+                                padding : 6
+                                MDLabel:
+                                MDRoundFlatIconButton:
+                                    text : 'Move'
+                                    icon : 'play-circle-outline'
+                                    icon_size : '24sp'
+                                    font_size : 17
+                                    on_release : root.inj_motor_on()
+                                MDRoundFlatIconButton:
+                                    text : 'Stop'
+                                    icon : 'stop-circle-outline'
+                                    icon_size : '24sp'
+                                    font_size : 17
+                                    on_release : root.inj_motor_off()
+                                MDLabel:
+                            MDBoxLayout:
+                                spacing : 10
+                                MDGridLayout:
+                                    cols: 2
+                                    MDLabel:
+                                        text: 'Forward'
+                                        font_size: 17
+                                    MDCheckbox:
+                                        group: 'inj_fr'
+                                        active : True
+                                        on_active : root.inj_toggle_forward_reversed(0)
+                                        theme_icon_color: "Custom"
+                                        color_active : app.theme_cls.primary_light
+
+                                MDGridLayout:
+                                    cols: 2
+                                    MDLabel:
+                                        text: 'Reverse'
+                                        font_size: 17
+                                    MDCheckbox:
+                                        group: 'inj_fr'
+                                        on_active : root.inj_toggle_forward_reversed(1)
+                                        theme_icon_color: "Custom"
+                                        color_active : app.theme_cls.primary_light
+                            MDBoxLayout:
+                                orientation: 'horizontal'
+                                spacing : 10
+                                MDLabel:
+                                    text:'Steps'
+                                    font_size: 17
+                                MDCheckbox:
+                                    on_active : root.inj_move_by_steps()
+                                    theme_icon_color: "Custom"
+                                    color_active : app.theme_cls.primary_light
+                                    id : inj_move_step
+                                MDLabel:
+                                MDLabel:
+                            MDBoxLayout:
+                                orientation: 'horizontal'
+                                spacing : 10
+                                MDTextField:
+                                    id : inj_motor_steps
+                                    hint_text : 'steps to move (range 1-3000)'
+                                    input_filter : 'int'
+                            MDBoxLayout:
+                                spacing : 10
+                                MDLabel:
+                                    markup : True
+                                    text : f'Motor Speed : {inj_speed_slider_motor.value}%'
+                                    id : inj_motor_speed
+                                    halign : 'center'
+                                    font_size: 17
+                                MDIcon:
+                                    icon: "walk"
+                                    pos_hint : {"center_x" : 0.5 , "center_y" : 0.5}
+                                    icon_size: "30sp"
+                                MDSlider:
+                                    min : 1
+                                    max : 100
+                                    value : 70
+                                    color: app.theme_cls.primary_light
+                                    id : inj_speed_slider_motor
+                                    on_value : root.inj_change_motor_speed()
+                                MDIcon:
+                                    icon: "run-fast"
+                                    pos_hint : {"center_x" : 0.5 , "center_y" : 0.5}
+                                    icon_size: "30sp"
+                        MDBoxLayout:
+                            orientation : 'vertical'
+
+                            padding: 10
+                            spacing: 10
+                            MDBoxLayout:
+                                orientation: 'vertical'
+                                spacing: 10
+                                MDLabel:
+                                    text: 'L2 Motor (3)'
+                                    bold : True
+                                    font_size: 20
+                            MDSeparator:
+                            MDBoxLayout:
+                                orientation: 'horizontal'
+                                spacing: 10
+                                padding : 6
+                                MDLabel:
+                                MDRoundFlatIconButton:
+                                    text : 'Move'
+                                    icon : 'play-circle-outline'
+                                    icon_size : '24sp'
+                                    font_size : 17
+                                    on_release : root.tray_motor_on()
+                                MDRoundFlatIconButton:
+                                    text : 'Stop'
+                                    icon : 'stop-circle-outline'
+                                    icon_size : '24sp'
+                                    font_size : 17
+                                    on_release : root.tray_motor_off()
+                                MDLabel:
+                            MDBoxLayout:
+                                spacing : 10
+                                MDGridLayout:
+                                    cols: 2
+                                    MDLabel:
+                                        text: 'Forward'
+                                        font_size: 17
+                                    MDCheckbox:
+                                        group: 'tray_fr'
+                                        active : True
+                                        on_active : root.tray_toggle_forward_reversed(0)
+                                        theme_icon_color: "Custom"
+                                        color_active : app.theme_cls.primary_light
+
+                                MDGridLayout:
+                                    cols: 2
+                                    MDLabel:
+                                        text: 'Reverse'
+                                        font_size: 17
+                                    MDCheckbox:
+                                        group: 'tray_fr'
+                                        on_active : root.tray_toggle_forward_reversed(1)
+                                        theme_icon_color: "Custom"
+                                        color_active : app.theme_cls.primary_light
+                            MDBoxLayout:
+                                orientation: 'horizontal'
+                                spacing : 10
+                                MDLabel:
+                                    text:'Steps'
+                                    font_size: 17
+                                MDCheckbox:
+                                    on_active : root.tray_move_by_steps()
+                                    theme_icon_color: "Custom"
+                                    color_active : app.theme_cls.primary_light
+                                    id : tray_move_step
+                                MDLabel:
+                                MDLabel:
+                            MDBoxLayout:
+                                orientation: 'horizontal'
+                                spacing : 10
+                                MDTextField:
+                                    id : tray_motor_steps
+                                    hint_text : 'steps to move (range 1-3000)'
+                                    input_filter : 'int'
+                            MDBoxLayout:
+                                spacing : 10
+                                MDLabel:
+                                    markup : True
+                                    text : f'Motor Speed : {inj_speed_slider_motor.value}%'
+                                    id : tray_motor_speed
+                                    halign : 'center'
+                                    font_size: 17
+                                MDIcon:
+                                    icon: "walk"
+                                    pos_hint : {"center_x" : 0.5 , "center_y" : 0.5}
+                                    icon_size: "30sp"
+                                MDSlider:
+                                    min : 1
+                                    max : 100
+                                    value : 70
+                                    color: app.theme_cls.primary_light
+                                    id : tray_speed_slider_motor
+                                    on_value : root.tray_change_motor_speed()
+                                MDIcon:
+                                    icon: "run-fast"
+                                    pos_hint : {"center_x" : 0.5 , "center_y" : 0.5}
+                                    icon_size: "30sp"
+                        MDBoxLayout:
+                            orientation : 'vertical'
+                            padding: 10
+                            spacing: 10
+                            MDBoxLayout:
+                                orientation: 'vertical'
+                                spacing: 10
+                                MDLabel:
+                                    text: 'R2 Motor (4)'
+                                    bold : True
+                                    font_size: 20
+                            MDSeparator:
+                            MDBoxLayout:
+                                spacing: 10
+                                padding : 6
+                                orientation: 'horizontal'
+                                MDLabel:
+                                MDRoundFlatIconButton:
+                                    text : 'Move'
+                                    icon : 'play-circle-outline'
+                                    icon_size : '24sp'
+                                    font_size : 17
+                                    on_release : root.r2_motor_on()
+
+                                MDRoundFlatIconButton:
+                                    text : 'Stop'
+                                    icon : 'stop-circle-outline'
+                                    icon_size : '24sp'
+                                    font_size : 17
+                                    on_release : root.r2_motor_off()
+                                MDLabel:
+                            MDBoxLayout:
+                                spacing : 10
+                                MDGridLayout:
+                                    cols: 2
+                                    MDLabel:
+                                        text: 'Forward'
+                                        font_size: 17
+                                    MDCheckbox:
+                                        group: 'r2'
+                                        active : True
+                                        on_active : root.r2_toggle_forward_reversed(0)
+                                        theme_icon_color: "Custom"
+                                        color_active : app.theme_cls.primary_light
+                                MDGridLayout:
+                                    cols: 2
+                                    MDLabel:
+                                        text: 'Reversed'
+                                        font_size: 17
+                                    MDCheckbox:
+                                        group: 'r2'
+                                        on_active : root.r2_toggle_forward_reversed(1)
+                                        theme_icon_color: "Custom"
+                                        color_active : app.theme_cls.primary_light
+                            MDBoxLayout:
+                                orientation: 'horizontal'
+                                spacing : 10
+                                MDLabel:
+                                    text:'Steps'
+                                    font_size: 17
+                                MDCheckbox:
+                                    on_active : root.r2_move_by_steps()
+                                    theme_icon_color: "Custom"
+                                    color_active : app.theme_cls.primary_light
+                                    id : r2_move_step
+                                MDLabel:
+                                MDLabel:
+                            MDBoxLayout:
+                                orientation: 'horizontal'
+                                spacing : 10
+                                MDTextField:
+                                    id : r2_motor_steps
+                                    hint_text : 'steps to move (range 1-3000)'
+                                    input_filter : 'int'
+
+                            MDBoxLayout:
+                                spacing : 10
+                                MDLabel:
+                                    markup : True
+                                    text : f'Motor Speed : {speed_slider_motor.value}%'
+                                    id : r2_motor_speed
+                                    halign : 'center'
+                                    font_size: 17
+                                MDIcon:
+                                    icon: "walk"
+                                    pos_hint : {"center_x" : 0.5 , "center_y" : 0.5}
+                                    icon_size: "30sp"
+                                MDSlider:
+                                    min : 1
+                                    max : 100
+                                    value : 70
+                                    color: app.theme_cls.primary_light
+                                    id : r2_speed_slider_motor
+                                    on_value : root.r2_change_motor_speed()
+                                MDIcon:
+                                    icon: "run-fast"
+                                    pos_hint : {"center_x" : 0.5 , "center_y" : 0.5}
+                                    icon_size: "30sp"
+                        MDBoxLayout :
+
+            AppTab:
+                name : 'Motor Control 2'
+                title : 'Motor Control 2'
+                md_bg_color: app.theme_cls.bg_dark
+                radius: 10
+                MDBoxLayout:
+                    orientation: 'vertical'
+                    padding : [32, 0]
+                    MDGridLayout :
+                        cols : 3
+                        rows : 2
+                        MDBoxLayout:
+                            orientation : 'vertical'
+                            padding: 10
+                            spacing: 10
+                            MDBoxLayout:
+                                orientation: 'vertical'
+                                spacing: 10
+                                MDLabel:
+                                    text: 'Front Motor (5)'
+                                    bold : True
+                                    font_size: 20
+                            MDSeparator:
+                            MDBoxLayout:
+                                spacing: 10
+                                padding : 6
+                                orientation: 'horizontal'
+                                MDLabel:
+                                MDRoundFlatIconButton:
+                                    text : 'Move'
+                                    icon : 'play-circle-outline'
+                                    icon_size : '24sp'
+                                    font_size : 17
+                                    on_release : root.front_motor_on()
+                                MDRoundFlatIconButton:
+                                    text : 'Stop'
+                                    icon : 'stop-circle-outline'
+                                    icon_size : '24sp'
+                                    font_size : 17
+                                    on_release : root.front_motor_off()
+                                MDLabel:
+                            MDBoxLayout:
+                                spacing : 10
+                                MDGridLayout:
+                                    cols: 2
+                                    MDLabel:
+                                        text: 'Forward'
+                                        font_size: 17
+                                    MDCheckbox:
+                                        group: 'front'
+                                        active : True
+                                        on_active : root.front_toggle_forward_reversed(0)
+                                        theme_icon_color: "Custom"
+                                        color_active : app.theme_cls.primary_light
+                                MDGridLayout:
+                                    cols: 2
+                                    MDLabel:
+                                        text: 'Reversed'
+                                        font_size: 17
+                                    MDCheckbox:
+                                        group: 'front'
+                                        on_active : root.front_toggle_forward_reversed(1)
+                                        theme_icon_color: "Custom"
+                                        color_active : app.theme_cls.primary_light
+                            MDBoxLayout:
+                                orientation: 'horizontal'
+                                spacing : 10
+                                MDLabel:
+                                    text:'Steps'
+                                    font_size: 17
+                                MDCheckbox:
+                                    on_active : root.front_move_by_steps()
+                                    theme_icon_color: "Custom"
+                                    color_active : app.theme_cls.primary_light
+                                    id : front_step
+                                MDLabel:
+                                MDLabel:
+                            MDBoxLayout:
+                                orientation: 'horizontal'
+                                spacing : 10
+                                MDTextField:
+                                    id : front_steps
+                                    hint_text : 'steps to move (range 1-3000)'
+                                    input_filter : 'int'
+
+                            MDBoxLayout:
+                                spacing : 10
+                                MDLabel:
+                                    markup : True
+                                    text : f'Motor Speed : {speed_slider_motor.value}%'
+                                    id : front_speed
+                                    halign : 'center'
+                                    font_size: 17
+                                MDIcon:
+                                    icon: "walk"
+                                    pos_hint : {"center_x" : 0.5 , "center_y" : 0.5}
+                                    icon_size: "30sp"
+                                MDSlider:
+                                    min : 1
+                                    max : 100
+                                    value : 70
+                                    color: app.theme_cls.primary_light
+                                    id : front_speed_slider_motor
+                                    on_value : root.front_change_motor_speed()
+                                MDIcon:
+                                    icon: "run-fast"
+                                    pos_hint : {"center_x" : 0.5 , "center_y" : 0.5}
+                                    icon_size: "30sp"
+                        MDBoxLayout:
+                            orientation : 'vertical'
+
+                            padding: 10
+                            spacing: 10
+                            MDBoxLayout:
+                                orientation: 'vertical'
+                                spacing: 10
+                                MDLabel:
+                                    text: 'Back Motor (6)'
+                                    bold : True
+                                    font_size: 20
+                            MDSeparator:
+                            MDBoxLayout:
+                                orientation: 'horizontal'
+                                spacing: 10
+                                padding : 6
+                                MDLabel:
+                                MDRoundFlatIconButton:
+                                    text : 'Move'
+                                    icon : 'play-circle-outline'
+                                    icon_size : '24sp'
+                                    font_size : 17
+                                    on_release : root.back_motor_on()
+                                MDRoundFlatIconButton:
+                                    text : 'Stop'
+                                    icon : 'stop-circle-outline'
+                                    icon_size : '24sp'
+                                    font_size : 17
+                                    on_release : root.back_motor_off()
+                                MDLabel:
+                            MDBoxLayout:
+                                spacing : 10
+                                MDGridLayout:
+                                    cols: 2
+                                    MDLabel:
+                                        text: 'Forward'
+                                        font_size: 17
+                                    MDCheckbox:
+                                        group: 'back'
+                                        active : True
+                                        on_active : root.back_toggle_forward_reversed(0)
+                                        theme_icon_color: "Custom"
+                                        color_active : app.theme_cls.primary_light
+
+                                MDGridLayout:
+                                    cols: 2
+                                    MDLabel:
+                                        text: 'Reversed'
+                                        font_size: 17
+                                    MDCheckbox:
+                                        group: 'back'
+                                        on_active : root.back_toggle_forward_reversed(1)
+                                        theme_icon_color: "Custom"
+                                        color_active : app.theme_cls.primary_light
+                            MDBoxLayout:
+                                orientation: 'horizontal'
+                                spacing : 10
+                                MDLabel:
+                                    text:'Steps'
+                                    font_size: 17
+                                MDCheckbox:
+                                    on_active : root.back_move_by_steps()
+                                    theme_icon_color: "Custom"
+                                    color_active : app.theme_cls.primary_light
+                                    id : back_step
+                                MDLabel:
+                                MDLabel:
+                            MDBoxLayout:
+                                orientation: 'horizontal'
+                                spacing : 10
+                                MDTextField:
+                                    id : back_steps
+                                    hint_text : 'steps to move (range 1-3000)'
+                                    input_filter : 'int'
+                            MDBoxLayout:
+                                spacing : 10
+                                MDLabel:
+                                    markup : True
+                                    text : f'Motor Speed : {inj_speed_slider_motor.value}%'
+                                    id : back_speed
+                                    halign : 'center'
+                                    font_size: 17
+                                MDIcon:
+                                    icon: "walk"
+                                    pos_hint : {"center_x" : 0.5 , "center_y" : 0.5}
+                                    icon_size: "30sp"
+                                MDSlider:
+                                    min : 1
+                                    max : 100
+                                    value : 70
+                                    color: app.theme_cls.primary_light
+                                    id : back_speed_slider_motor
+                                    on_value : root.back_change_motor_speed()
+                                MDIcon:
+                                    icon: "run-fast"
+                                    pos_hint : {"center_x" : 0.5 , "center_y" : 0.5}
+                                    icon_size: "30sp"
+                        MDBoxLayout:
+                            orientation : 'vertical'
+                            padding: 10
+                            spacing: 10
+                            MDBoxLayout:
+                                orientation: 'vertical'
+                                spacing: 10
+                                MDLabel:
+                                    text: 'Up1 Motor (7)'
+                                    bold : True
+                                    font_size: 20
+                            MDSeparator:
+                            MDBoxLayout:
+                                orientation: 'horizontal'
+                                spacing: 10
+                                padding : 6
+                                MDLabel:
+                                MDRoundFlatIconButton:
+                                    text : 'Move'
+                                    icon : 'play-circle-outline'
+                                    icon_size : '24sp'
+                                    font_size : 17
+                                    on_release : root.up1_motor_on()
+                                MDRoundFlatIconButton:
+                                    text : 'Stop'
+                                    icon : 'stop-circle-outline'
+                                    icon_size : '24sp'
+                                    font_size : 17
+                                    on_release : root.up1_motor_off()
+                                MDLabel:
+                            MDBoxLayout:
+                                spacing : 10
+                                MDGridLayout:
+                                    cols: 2
+                                    MDLabel:
+                                        text: 'Forward'
+                                        font_size: 17
+                                    MDCheckbox:
+                                        group: 'up1'
+                                        active : True
+                                        on_active : root.up1_toggle_forward_reversed(0)
+                                        theme_icon_color: "Custom"
+                                        color_active : app.theme_cls.primary_light
+
+                                MDGridLayout:
+                                    cols: 2
+                                    MDLabel:
+                                        text: 'Reversed'
+                                        font_size: 17
+                                    MDCheckbox:
+                                        group: 'up1'
+                                        on_active : root.up1_toggle_forward_reversed(1)
+                                        theme_icon_color: "Custom"
+                                        color_active : app.theme_cls.primary_light
+                            MDBoxLayout:
+                                orientation: 'horizontal'
+                                spacing : 10
+                                MDLabel:
+                                    text:'Steps'
+                                    font_size: 17
+                                MDCheckbox:
+                                    on_active : root.up1_move_by_steps()
+                                    theme_icon_color: "Custom"
+                                    color_active : app.theme_cls.primary_light
+                                    id : up1_step
+                                MDLabel:
+                                MDLabel:
+                            MDBoxLayout:
+                                orientation: 'horizontal'
+                                spacing : 10
+                                MDTextField:
+                                    id : up1_steps
+                                    hint_text : 'steps to move (range 1-3000)'
+                                    input_filter : 'int'
+                            MDBoxLayout:
+                                spacing : 10
+                                MDLabel:
+                                    markup : True
+                                    text : f'Motor Speed : {inj_speed_slider_motor.value}%'
+                                    id : up1_speed
+                                    halign : 'center'
+                                    font_size: 17
+                                MDIcon:
+                                    icon: "walk"
+                                    pos_hint : {"center_x" : 0.5 , "center_y" : 0.5}
+                                    icon_size: "30sp"
+                                MDSlider:
+                                    min : 1
+                                    max : 100
+                                    value : 70
+                                    color: app.theme_cls.primary_light
+                                    id : up1_speed_slider_motor
+                                    on_value : root.up1_change_motor_speed()
+                                MDIcon:
+                                    icon: "run-fast"
+                                    pos_hint : {"center_x" : 0.5 , "center_y" : 0.5}
+                                    icon_size: "30sp"
+                        MDBoxLayout:
+                            orientation : 'vertical'
+                            padding: 10
+                            spacing: 10
+                            MDBoxLayout:
+                                orientation: 'vertical'
+                                spacing: 10
+                                MDLabel:
+                                    text: 'Up2 Motor (8)'
+                                    bold : True
+                                    font_size: 20
+                            MDSeparator:
+                            MDBoxLayout:
+                                orientation: 'horizontal'
+                                spacing: 10
+                                padding : 6
+                                MDLabel:
+                                MDRoundFlatIconButton:
+                                    text : 'Move'
+                                    icon : 'play-circle-outline'
+                                    icon_size : '24sp'
+                                    font_size : 17
+                                    on_release : root.up2_motor_on()
+                                MDRoundFlatIconButton:
+                                    text : 'Stop'
+                                    icon : 'stop-circle-outline'
+                                    icon_size : '24sp'
+                                    font_size : 17
+                                    on_release : root.up2_motor_off()
+                                MDLabel:
+                            MDBoxLayout:
+                                spacing : 10
+                                MDGridLayout:
+                                    cols: 2
+                                    MDLabel:
+                                        text: 'Forward'
+                                        font_size: 17
+                                    MDCheckbox:
+                                        group: 'up2'
+                                        active : True
+                                        on_active : root.up2_toggle_forward_reversed(0)
+                                        theme_icon_color: "Custom"
+                                        color_active : app.theme_cls.primary_light
+
+                                MDGridLayout:
+                                    cols: 2
+                                    MDLabel:
+                                        text: 'Reversed'
+                                        font_size: 17
+                                    MDCheckbox:
+                                        group: 'up2'
+                                        on_active : root.up2_toggle_forward_reversed(1)
+                                        theme_icon_color: "Custom"
+                                        color_active : app.theme_cls.primary_light
+                            MDBoxLayout:
+                                orientation: 'horizontal'
+                                spacing : 10
+                                MDLabel:
+                                    text:'Steps'
+                                    font_size: 17
+                                MDCheckbox:
+                                    on_active : root.up2_move_by_steps()
+                                    theme_icon_color: "Custom"
+                                    color_active : app.theme_cls.primary_light
+                                    id : up2_step
+                                MDLabel:
+                                MDLabel:
+                            MDBoxLayout:
+                                orientation: 'horizontal'
+                                spacing : 10
+                                MDTextField:
+                                    id : up2_steps
+                                    hint_text : 'steps to move (range 1-3000)'
+                                    input_filter : 'int'
+                            MDBoxLayout:
+                                spacing : 10
+                                MDLabel:
+                                    markup : True
+                                    text : f'Motor Speed : {inj_speed_slider_motor.value}%'
+                                    id : up2_speed
+                                    halign : 'center'
+                                    font_size: 17
+                                MDIcon:
+                                    icon: "walk"
+                                    pos_hint : {"center_x" : 0.5 , "center_y" : 0.5}
+                                    icon_size: "30sp"
+                                MDSlider:
+                                    min : 1
+                                    max : 100
+                                    value : 70
+                                    color: app.theme_cls.primary_light
+                                    id : up2_speed_slider_motor
+                                    on_value : root.up2_change_motor_speed()
+                                MDIcon:
+                                    icon: "run-fast"
+                                    pos_hint : {"center_x" : 0.5 , "center_y" : 0.5}
+                                    icon_size: "30sp"
+                        MDBoxLayout:
+                        MDBoxLayout:
+
+            AppTab:
+                name : 'Output'
+                title : 'Output'
+                padding : 16
+                MDGridLayout:
+                    #operation view tab
+                    spacing : 24
+                    cols : 5
+
+                    IOCard:
+                        MDBoxLayout:
+                            adaptive_height: True
+                            CardTitle:
+                                text : 'R1 Suction 1'
+                        MDSeparator:
+                        MDBoxLayout:
+                            spacing : 8
+                            OffButton:
+                                text : 'OFF'
+                                size_hint_x : 1.5
+                                on_release: root.suction(1)
+                            MDRaisedButton:
+                                text : 'ON'
+                                size_hint_x : 1.5
+                                on_release: root.suction(0)
+                        MDBoxLayout:
+                            spacing : 24
+                            MDLabel:
+                                text : 'Sensor :'
+                                bold : True
+                            SensorLabel :
+                                text : 'NA'
+                                id : suction_s
+                    IOCard:
+                        MDBoxLayout:
+                            adaptive_height: True
+                            CardTitle:
+                                text : 'R1 Suction 2'
+                        MDSeparator:
+                        MDBoxLayout:
+                            spacing : 8
+                            OffButton:
+                                text : 'OFF'
+                                size_hint_x : 1.5
+                                on_release: root.suction2(1)
+                            MDRaisedButton:
+                                text : 'ON'
+                                size_hint_x : 1.5
+                                on_release: root.suction2(0)
+                        MDBoxLayout:
+                            spacing : 24
+                            MDLabel:
+                                text : 'Sensor :'
+                                bold : True
+                            SensorLabel :
+                                text : 'NA'
+                                id : suction2_s
+                    IOCard:
+                        MDBoxLayout:
+                            adaptive_height: True
+                            CardTitle:
+                                text : 'R2 Suction 1'
+                        MDSeparator:
+                        MDBoxLayout:
+                            spacing : 8
+                            OffButton:
+                                size_hint_x : 1.5
+                                on_release: root.r2_suction(0)
+                            MDRaisedButton:
+                                text : 'On'
+                                size_hint_x : 1.5
+                                on_release: root.r2_suction(1)
+                        MDBoxLayout:
+                    IOCard:
+                        MDBoxLayout:
+                            adaptive_height: True
+                            CardTitle:
+                                text : 'R2 Suction 2'
+                        MDSeparator:
+                        MDBoxLayout:
+                            spacing : 8
+                            OffButton:
+                                size_hint_x : 1.5
+                                on_release: root.r2_suction2(0)
+                            MDRaisedButton:
+                                text : 'On'
+                                size_hint_x : 1.5
+                                on_release: root.r2_suction2(1)
+                        MDBoxLayout:
+                    IOCard:
+                        MDBoxLayout:
+                            adaptive_height: True
+                            CardTitle:
+                                text : 'Nozzle 2'
+                        MDSeparator:
+                        MDBoxLayout:
+                            spacing : 8
+                            OffButton:
+                                size_hint_x : 1.5
+                                on_release: root.nozzle2(0)
+                            MDRaisedButton:
+                                text : 'On'
+                                size_hint_x : 1.5
+                                on_release: root.nozzle2(1)
+                        MDBoxLayout:
+                    IOCard:
+                        MDBoxLayout:
+                            adaptive_height: True
+                            CardTitle:
+                                text : 'Injection Z-Feed 1'
+                        MDSeparator:
+                        MDBoxLayout:
+                            spacing : 8
+                            OffButton:
+                                size_hint_x : 1.5
+                                on_release: root.injection_Z_feed1(0)
+                            MDRaisedButton:
+                                text : 'On'
+                                size_hint_x : 1.5
+                                on_release: root.injection_Z_feed1(1)
+                        MDBoxLayout:
+                            spacing : 24
+                            MDLabel:
+                                text : 'Sensor :'
+                                bold : True
+                            SensorLabel :
+                                text : 'NA'
+                                id : izf_1
+                    IOCard:
+                        MDBoxLayout:
+                            adaptive_height: True
+                            CardTitle:
+                                text : 'Injection Z-Feed 2'
+                        MDSeparator:
+                        MDBoxLayout:
+                            spacing : 8
+                            OffButton:
+                                size_hint_x : 1.5
+                                on_release: root.injection_Z_feed2(0)
+                            MDRaisedButton:
+                                text : 'On'
+                                size_hint_x : 1.5
+                                on_release: root.injection_Z_feed2(1)
+                        MDBoxLayout:
+                            spacing : 24
+                            MDLabel:
+                                text : 'Sensor :'
+                                bold : True
+                            SensorLabel :
+                                text : 'NA'
+                                id : izf_2
+                    IOCard:
+                    IOCard:
+                    IOCard:
+                    IOCard:
+                    IOCard:
+                    IOCard:
+                    IOCard:
+                    IOCard:
+                    IOCard:
+
+        LogoLayout:
+
+<TuningScreen>
+    MDFloatLayout:
+        id:main
+        canvas:
+            Color:
+                rgba: (0.3,0.3,0.3,1)
+            Line:
+                points : [self.width*0.74, self.height*0.02, self.width*0.74, self.height*0.98]
+                width : 1
+
+
+
+        MDBoxLayout:
+            orientation : 'vertical'
+            size_hint: (0.1,0.06)
+            pos_hint : {'x':0.908,'y':0.925}
+            MDIconButton:
+                icon: "stop-circle-outline"
+                icon_size: "56sp"
+                id : stop_button
+                pos_hint: {"center_x": .5}
+                theme_icon_color: "Custom"
+                icon_color: app.theme_cls.error_color
+                on_release : root.robot_stop()
+            MDLabel:
+                size_hint_y : 0.1
+                text : 'Robot Stop'
+                halign : 'center'
+                bold : True
+                id : stop_label
+                theme_text_color : "Error"
+                font_size : 12
+
+        #Robot Control Panel
+        Title:
+            size_hint: (0.22,0.07)
+            pos_hint : {'x':0.76,'y':0.93}
+            text : 'Control Panel'
+
+        MDTabs:
+            id : tabs
+            tab_hint_x : True
+            size_hint : (0.22, 0.86)
+            pos_hint : {'x':0.76,'y':0.06 }
+            background_color : [0,0,0,0]
+            indicator_color : app.theme_cls.primary_color
+            lock_swiping :True
+            AppTab:
+                name : 'Robot'
+                title : 'Robot'
+                spacing : 8
+                padding : 16
+                MDBoxLayout:
+                    orientation : 'horizontal'
+                    size_hint_y : 0.75
+                    MDLabel:
+                        text : 'Cartesian'
+                        halign : 'center'
+                    MDCheckbox:
+                        group : 'pp'
+                        active : True
+                        on_active : root.toggle_move(0)
+                        theme_icon_color: "Custom"
+                        color_active : app.theme_cls.primary_light
+                    MDCheckbox:
+                        group : 'pp'
+                        on_active : root.toggle_move(1)
+                        theme_icon_color: "Custom"
+                        color_active : app.theme_cls.primary_light
+                    MDLabel :
+                        text : 'Joint'
+                        halign : 'center'
+                MDBoxLayout:
+                    size_hint_y : 0.75
+                    MDLabel:
+                        text : f'Robot Speed : {speed_slider.value}%'
+                        id : robot_speed
+                    MDIcon:
+                        icon: "walk"
+                        pos_hint : {"center_x" : 0.5 , "center_y" : 0.5}
+                        icon_size: "40sp"
+                    MDSlider:
+                        min : 1
+                        max : 100
+                        value : 10
+                        pos_hint : {"center_x" : 0.5 , "center_y" : 0.5}
+                        color: app.theme_cls.primary_light
+                        id : speed_slider
+                        on_value : root.change_speed()
+                    MDIcon:
+                        icon: "run-fast"
+                        pos_hint : {"center_x" : 0.5 , "center_y" : 0.5}
+                        icon_size: "40sp"
+                MDBoxLayout:
+                    size_hint_y : 2.3
+                    orientation : 'vertical'
+                    spacing : 8
+                    padding : [0,0,16,0]
+                    MDBoxLayout:
+                        MDLabel:
+                            text : "Freedrive"
+                        MDSwitch:
+                            on_active : root.free_drive()
+                            id : freedrive_toggle
+                            pos_hint : {'center_y': 0.3}
+                    MDBoxLayout:
+                        MDLabel:
+                            text : "Position Update"
+                        MDSwitch:
+                            on_active : root.position_update_toggle()
+                            active : True
+                            id : position_update_toggle
+                            pos_hint : {'center_y': 0.3}
+                    MDBoxLayout:
+                        MDLabel:
+                            text : "Step Move"
+                        MDSwitch:
+                            id : step_move_toggle
+                            on_active : root.step_toggle()
+                            pos_hint : {'center_y': 0.3}
+
+                MDBoxLayout:
+                    spacing : 8
+                    MyTextField:
+                        hint_text : 'Step Distance (mm)'
+                        id : step_input
+                        disabled : True
+                        input_filter : 'float'
+                MDBoxLayout:
+                    orientation : 'horizontal'
+                    spacing : 8
+                    MDLabel:
+                        text : 'X :'
+                        valign : 'center'
+                        size_hint_x : 0.5
+                        id : label_1
+
+                    MyTextField:
+                        text : ''
+                        valign : 'center'
+                        id : pos_1
+                        disabled : True
+                        input_filter : 'float'
+                        hint_text : 'Position (mm)'
+                    MoveNegativeButton :
+                        on_press : root.robot_jog('x-')
+                        on_release : root.robot_stop()
+                    MovePositiveButton :
+                        on_press : root.robot_jog('x+')
+                        on_release : root.robot_stop()
+                MDBoxLayout:
+                    orientation : 'horizontal'
+                    spacing : 8
+                    MDLabel:
+                        text : 'Y :'
+                        size_hint_x : 0.5
+                        valign : 'center'
+                        id : label_2
+
+                    MyTextField:
+                        text : ''
+                        valign : 'center'
+                        id : pos_2
+                        disabled : True
+                        input_filter : 'float'
+                        hint_text : 'Position (mm)'
+                    MoveNegativeButton :
+                        on_press : root.robot_jog('y-')
+                        on_release : root.robot_stop()
+                    MovePositiveButton :
+                        on_press : root.robot_jog('y+')
+                        on_release : root.robot_stop()
+                MDBoxLayout:
+                    orientation : 'horizontal'
+                    spacing : 8
+                    MDLabel:
+                        text : 'Z :'
+                        size_hint_x : 0.5
+                        valign : 'center'
+                        id : label_3
+
+                    MyTextField:
+                        text : ''
+                        valign : 'center'
+                        id : pos_3
+                        disabled : True
+                        input_filter : 'float'
+                        hint_text : 'Position (mm)'
+                    MoveNegativeButton :
+                        on_press : root.robot_jog('z-')
+                        on_release : root.robot_stop()
+                    MovePositiveButton :
+                        on_press : root.robot_jog('z+')
+                        on_release : root.robot_stop()
+                MDBoxLayout:
+                    orientation : 'horizontal'
+                    spacing : 8
+                    MDLabel:
+                        text : 'RX :'
+                        size_hint_x : 0.5
+                        valign : 'center'
+                        id : label_4
+
+                    MyTextField:
+                        text : ''
+                        valign : 'center'
+                        id : pos_4
+                        disabled : True
+                        input_filter : 'float'
+                        hint_text : 'Angle (radians)'
+                    MoveNegativeButton :
+                        on_press : root.robot_jog('rx-')
+                        on_release : root.robot_stop()
+                    MovePositiveButton :
+                        on_press : root.robot_jog('rx+')
+                        on_release : root.robot_stop()
+                MDBoxLayout:
+                    orientation : 'horizontal'
+                    spacing : 8
+                    MDLabel:
+                        text : 'RY :'
+                        size_hint_x : 0.5
+                        valign : 'center'
+                        id : label_5
+
+                    MyTextField:
+                        text : ''
+                        valign : 'center'
+                        id : pos_5
+                        disabled : True
+                        input_filter : 'float'
+                        hint_text : 'Angle (radians)'
+                    MoveNegativeButton :
+                        on_press : root.robot_jog('ry-')
+                        on_release : root.robot_stop()
+                    MovePositiveButton :
+                        on_press : root.robot_jog('ry+')
+                        on_release : root.robot_stop()
+                MDBoxLayout:
+                    orientation : 'horizontal'
+                    spacing : 8
+                    MDLabel:
+                        text : 'RZ :'
+                        size_hint_x : 0.5
+                        valign : 'center'
+                        id : label_6
+
+                    MyTextField:
+                        text : ''
+                        valign : 'center'
+                        id : pos_6
+                        disabled : True
+                        input_filter : 'float'
+                        hint_text : 'Angle (radians)'
+                    MoveNegativeButton :
+                        on_press : root.robot_jog('rz-')
+                        on_release : root.robot_stop()
+                    MovePositiveButton :
+                        on_press : root.robot_jog('rz+')
+                        on_release : root.robot_stop()
+
+
+                MDBoxLayout:
+                    size_hint_y : 0.75
+                    spacing : 16
+                    MDRoundFlatIconButton:
+                        text : 'Move to Position'
+                        icon : 'robot-industrial'
+                        size_hint_x : 1
+                        on_press : root.move_to_input_pos()
+                        font_size : 17
+                    MDRoundFlatIconButton:
+                        text : 'Get Force'
+                        icon : 'arm-flex'
+                        size_hint_x : 1
+                        on_press : root.get_force()
+                        font_size : 17
+
+        Title:
+            size_hint: (0.15,0.07)
+            pos_hint : {'x':0.015,'y':0.93}
+            text : 'Program Tuning'
+
+        MyTab:
+            id : tabs
+            tab_hint_x : True
+            size_hint : 0.7,0.73
+            pos_hint: {'x':0.015,'y':0.19}
+            background_color : app.theme_cls.bg_normal
+            indicator_color : app.theme_cls.primary_color
+            lock_swiping :True
+            AppTab:
+                name : 'Parts'
+                title : 'Parts'
+                padding : 16
+                md_bg_color: app.theme_cls.bg_dark
+                radius: 10
+                MDBoxLayout:
+                    size_hint_y : 0.35
+                    spacing: 32
+                    MDBoxLayout:
+                        spacing: 16
+                        MDBoxLayout:
+                            spacing : 8
+                            orientation : 'vertical'
+                            MDLabel:
+                                text : '1. Select Part'
+                                valign : 'top'
+                                font_style: 'H6'
+                            MDBoxLayout:
+                                size_hint_y : 1.5
+                                MDDropDownItem:
+                                    id: part_select_button
+                                    text: "Please Select"
+                                    size_hint_x : None
+                                    on_release : root.part_menu.open()
+                                    pos_hint : {'center_y':0.5}
+                        MDBoxLayout:
+                            spacing : 8
+                            orientation : 'vertical'
+                            MDLabel:
+                                text : '2. Select Category'
+                                valign : 'top'
+                                font_style: 'H6'
+                            MDBoxLayout:
+                                size_hint_y : 1.5
+                                MDDropDownItem:
+                                    id: category_select_button
+                                    text: "Please Select"
+                                    size_hint_x : None
+                                    on_release : root.cat_menu.open()
+                                    pos_hint : {'center_y':0.5}
+
+                        MDBoxLayout:
+                            orientation : 'vertical'
+                            spacing : 8
+                            MDLabel:
+                                text : '3. Select Parameter'
+                                valign : 'top'
+                                font_style: 'H6'
+                            MDBoxLayout:
+                                size_hint_y : 1.5
+                                MDDropDownItem:
+                                    id: position_select_button
+                                    text: "Please Select"
+                                    on_release : root.pos_menu.open()
+                                    pos_hint : {'center_y':0.5}
+                    MDSeparator:
+                        orientation : 'vertical'
+                    MDBoxLayout:
+                        orientation : 'vertical'
+                        MDBoxLayout:
+                            spacing : 8
+                            MDLabel:
+                                text : 'Global Positions'
+                                valign : 'top'
+                                font_style: 'H6'
+                            MDBoxLayout:
+                                size_hint_x : 1.5
+                                MDDropDownItem:
+                                    id : global_pos
+                                    text: "Please Select"
+                                    on_release : root.global_menu.open()
+                                    pos_hint : {'center_y':0.5}
+                            MDRoundFlatButton:
+                                text : 'Move to Position'
+                                on_press : root.move_to_global_pos()
+                                on_release : root.robot_stop()
+                                always_release: True
+                                font_size : 17
+                                pos_hint : {'center_y':0.5}
+                        MDBoxLayout:
+                            size_hint_y : 1.5
+
+                MDBoxLayout:
+                    size_hint_y : 1.5
+                    padding : [0,16]
+                    spacing : 32
+                    MDBoxLayout:
+                        orientation : 'vertical'
+                        MDLabel:
+                            text : 'Current Selection'
+                            valign : 'top'
+                            underline : True
+                            font_style: 'H6'
+                        MDBoxLayout:
+                            id : part_current_box
+
+                        MDBoxLayout:
+                            spacing : 16
+                            MDRoundFlatButton:
+                                text : 'Move to Position'
+                                on_press : root.move_to_pos()
+                                on_release : root.robot_stop()
+                                always_release: True
+                                font_size : 17
+                                pos_hint : {'center_y':0.5}
+                            MDRoundFlatButton:
+                                text : 'Save & Update'
+                                font_size : 17
+                                on_release : root.press_save_and_update()
+                                pos_hint : {'center_y':0.5}
+                                theme_text_color : 'Custom'
+                                text_color : app.theme_cls.accent_color
+                                line_color :  app.theme_cls.accent_color
+                    MDBoxLayout:
+                        orientation : 'vertical'
+                        MDLabel:
+                            text : 'Position Configuration'
+                            valign : 'top'
+                            underline : True
+                            font_style: 'H6'
+                        MDBoxLayout:
+                            orientation : 'vertical'
+                            MDBoxLayout:
+                                spacing : 16
+                                MDLabel:
+                                    text : 'Gripper 1'
+                                    halign : 'center'
+                                MDCheckbox:
+                                    group : 'pp1'
+                                    active : True
+                                    theme_icon_color: "Custom"
+                                    color_active : app.theme_cls.primary_light
+                                    on_active : root.gripper_select(1)
+                                MDLabel :
+                                    text : 'Gripper 2'
+                                    halign : 'center'
+                                MDCheckbox:
+                                    group : 'pp1'
+                                    theme_icon_color: "Custom"
+                                    color_active : app.theme_cls.primary_light
+                                    on_active : root.gripper_select(2)
+
+                            MDBoxLayout:
+                                spacing : 16
+                                MDLabel:
+                                    text : 'Offset : '
+                                    bold : True
+                                    size_hint_x : 1.5
+                                MyTextField:
+                                    id : x_off
+                                    hint_text : 'Enter X (mm)'
+                                    input_filter : 'float'
+                                    text : ''
+                                    pos_hint : {'center_y':0.5}
+                                MyTextField:
+                                    id : y_off
+                                    hint_text : 'Enter Y (mm)'
+                                    text : ''
+                                    input_filter : 'float'
+                                    pos_hint : {'center_y':0.5}
+                                MyTextField:
+                                    id : z_off
+                                    hint_text : 'Enter Z (mm)'
+                                    text : ''
+                                    input_filter : 'float'
+                                    pos_hint : {'center_y':0.5}
+
+                        MDBoxLayout:
+                            spacing : 16
+                            MDLabel:
+                                text : 'Pocket Number : '
+                                bold : True
+                                size_hint_x : 1.5
+                            MyTextField:
+                                id : enter_row
+                                hint_text : 'Enter Row'
+                                input_filter : 'int'
+                                text : ''
+                                pos_hint : {'center_y':0.5}
+                            MyTextField:
+                                id : enter_col
+                                hint_text : 'Enter Column'
+                                text : ''
+                                input_filter : 'int'
+                                pos_hint : {'center_y':0.5}
+                            MDLabel:
+                MDSeparator:
+                    MDBoxLayout:
+                        spacing : 24
+
+        LogoLayout:
+
+<TestScreen>
+    MDFloatLayout:
+        id:main
+        LogoLayout:
+        MDBoxLayout:
+            size_hint : (0.5,0.1)
+            pos_hint : {'x': 0.01, 'y':0.8}
+            spacing : 8
+            MDRaisedButton:
+                text: 'View Threads'
+                md_bg_color:get_color_from_hex('5BAD9F')
+                on_release:
+                    root.view_thread()
+        MDBoxLayout:
+            size_hint : (0.5,0.1)
+            pos_hint : {'x': 0.01, 'y':0.6}
+            spacing : 8
+            MDRaisedButton:
+                text: 'Log Temperature'
+                id : log_temp
+                on_release:
+                    root.press_log_temp()
+        MDBoxLayout:
+            size_hint: (0.2,0.15)
+            pos_hint : {'x':0.01,'y':0.03}
+            orientation : 'vertical'
+            spacing : 8
+            MDLabel:
+                font_style : 'Body1'
+                text : 'Test Error Codes'
+            MDBoxLayout:
+                MDTextField:
+                    id : code_input
+                    hint_text : 'Error Code'
+
+                MDRaisedButton:
+                    text : 'Check'
+                    on_release: root.check_error_code()
+        MDBoxLayout:
+            size_hint: (0.2,0.15)
+            pos_hint : {'x':0.01,'y':0.3}
+            orientation : 'vertical'
+            spacing : 8
+            MDLabel:
+                font_style : 'Body1'
+                text : 'Test protect'
+            MDBoxLayout:
+                MDRaisedButton:
+                    text : 'password'
+                    on_release: root.test_password()
+
+        MDBoxLayout:
+            orientation : 'vertical'
+            size_hint: (0.6,0.17)
+            pos_hint : {'x':0.015,'y':0.01}
+            Title:
+                text : 'Tuning Log'
+                size_hint_y : 0.25
+            MDBoxLayout:
+                orientation : 'horizontal'
+                spacing : 8
+                md_bg_color: app.theme_cls.bg_dark
+                radius: 10
+
+                ScrollView:
+                    do_scroll_x: True
+                    do_scroll_y: True
+                    bar_inactive_color : [0,0,0,0]
+                    bar_color : [0.3,0.3,0.3,1]
+                    bar_width : 8
+                    scroll_type : ['bars','content']
+                    id : message_log
+
+                    MDGridLayout:
+                        id: log_label
+                        cols: 1
+                        size_hint_y : None
+                        height: self.minimum_height
+
+        MDBoxLayout:
+            size_hint: (0.05,0.15)
+            pos_hint : {'x':0.62,'y':0.01}
+            orientation : 'vertical'
+            MDBoxLayout:
+                orientation : 'vertical'
+                MDLabel:
+                MDCheckbox:
+                    id : auto_scroll
+                    active : 1
+                    theme_icon_color: "Custom"
+                    color_active : app.theme_cls.primary_light
+                MDLabel:
+                    text: 'Autoscroll'
+                    size_hint_y : 0.2
+                    font_size: 13
+                    halign: "center"
+
+            MDBoxLayout:
+                padding : [6,0]
+                MDRoundFlatIconButton:
+                    on_release : root.clear_log()
+                    icon : 'delete'
+                    text : 'Clear'
+
+<LogoLayout@BoxLayout>
+    orientation: 'horizontal'
+    size_hint : 0.07,0.055
+    pos_hint : {'x':0.925,'y':0.005}
+    MDLabel
+        size_hint_x : 0.6
+        canvas.before:
+            Color :
+                rgba : 1,1,1,1
+            Rectangle :
+                pos : (self.x,self.y)
+                size : (self.width,self.height)
+                source : LogoDir
+    Label :
+        font_size : 24
+        markup : True
+        color: RedText
+        text: '[b]Aetec'
+        pos_hint:{'x':0.1}
+
+<IOCard>
+    spacing : "10dp"
+    orientation : 'vertical'
+    padding : [24,12]
+<Title@MDLabel>
+    bold : True
+    underline : True
+    text_size : self.size
+    font_style: 'H5'
+    valign : 'center'
+    halign : 'left'
+
+<Subtitle@MDLabel>
+    bold : True
+    text_size : self.size
+    font_size : 17
+    valign : 'center'
+
+<NameTag@MDLabel>
+    text_size : self.size
+    font_size : 15
+    valign : 'center'
+
+<ToolTipMDFloatingActionButton@MDFloatingActionButton+MDTooltip>
+
+<TooltipMDIconButton@MDIconButton+MDTooltip>
+
+<TooltipMDRoundFlatIconButton@MDRoundFlatIconButton+MDTooltip>
+
+<TooltipMDRoundButton@MDRoundFlatButton+MDTooltip>
+
+<CardTitle@MDLabel>:
+    theme_text_color : "Primary"
+    valign : 'center'
+    font_style : 'H6'
+    adaptive_height : True
+
+<OffButton@MDFlatButton>:
+    text : 'Off'
+    theme_text_color : 'Custom'
+    text_color : app.theme_cls.primary_color
+
+
+<ControlButton@MDRoundFlatIconButton>
+    font_size : '32sp'
+    icon_size : '32sp'
+    bold : True
+
+<SensorLabel@MDLabel>
+    theme_text_color : 'Custom'
+    text_color : app.theme_cls.text_color
+
+<InputLabel@MDLabel>
+    halign: 'center'
+    font_size : 16
+
+<MovePositiveButton@TooltipMDIconButton>
+    theme_icon_color: "Custom"
+    icon : 'plus-circle'
+    icon_color: app.theme_cls.primary_color
+    icon_size: "55sp"
+    pos_hint: {"center_x": .5, "center_y": .5}
+    always_release: True
+
+<MoveNegativeButton@TooltipMDIconButton>
+    theme_icon_color: "Custom"
+    icon : 'minus-circle'
+    icon_color: app.theme_cls.primary_color
+    icon_size: "55sp"
+    pos_hint: {"center_x": .5, "center_y": .5}
+    always_release: True
+
+<LegendLayout@MDBoxLayout>
+    orientation: 'vertical'
+    radius : 10
+    opacity : 0
+
+<IconListItem>
+    IconLeftWidget:
+        icon: root.icon
+        on_release : root.iconpress()
+
+<DoorOpenedDialog>
+
+    MDBoxLayout:
+        padding : [0,100,0,8]
+        orientation : 'vertical'
+        MDFloatLayout:
+            canvas.before:
+                Color :
+                    rgba : 1,1,1,1
+                Rectangle :
+                    pos : (self.x + self.width/4,self.y)
+                    size : (self.width/2,self.height)
+                    source : app.view
+            Button:
+                id : left_door1
+                markup : True
+                pos_hint : {'x' : 0.22, 'y': 0.35}
+                size_hint : (0.05,0.3)
+                background_color : app.theme_cls.error_color
+
+            Button:
+                id : right_door1
+                markup : True
+                pos_hint : {'x' : 0.73, 'y': 0.03}
+                size_hint : (0.05,0.3)
+                background_color : app.theme_cls.error_color
+            Button:
+                id : right_door2
+                markup : True
+                pos_hint : {'x' : 0.73, 'y': 0.35}
+                size_hint : (0.05,0.3)
+                background_color : app.theme_cls.error_color
+            Button:
+                id : right_door3
+                markup : True
+                pos_hint : {'x' : 0.73, 'y': 0.67}
+                size_hint : (0.05,0.3)
+                background_color : app.theme_cls.error_color
+            Button:
+                id : front_door1
+                markup : True
+                pos_hint : {'x' : 0.425, 'y': 0}
+                size_hint : (0.15,0.07)
+                background_color : app.theme_cls.error_color
+            Button:
+                id : front_door2
+                markup : True
+                pos_hint : {'x' : 0.425, 'y': 0.93}
+                size_hint : (0.15,0.07)
+                background_color : app.theme_cls.error_color
+
+        MDBoxLayout:
+            size_hint_y : 0.4
+            MDLabel:
+                text: 'Close all doors to resume operation'
+                halign: 'center'
+                markup: True
+                id : countdown_text
+
+
+<OvenContent>
+    adaptive_height: True
+    MDLabel:
+        id : status_label
+        text : "Status : Stopped"
+        theme_text_color: "Custom"
+        text_color: app.theme_cls.text_color
+    TooltipMDIconButton:
+        icon: "play-circle-outline"
+        icon_size: "55sp"
+        pos_hint: {"center_x": .5}
+        theme_icon_color: "Custom"
+        icon_color: get_color_from_hex('#00aa00')
+        on_release : root.start_oven()
+        tooltip_text : 'Start'
+    TooltipMDIconButton:
+        icon: "stop-circle-outline"
+        icon_size: "55sp"
+        pos_hint: {"center_x": .5}
+        theme_icon_color: "Custom"
+        icon_color: app.theme_cls.error_color
+        on_release : root.stop_oven()
+        tooltip_text : 'Stop'
+
+<CircularProgressBarMagenta>
+    canvas.before:
+        Color :
+            rgba: root.bar_color + [0.3]
+        Line:
+            width: root.bar_width
+            ellipse: (self.x , self.y, self.width , self.height , 0 ,360)
+
+    canvas.after:
+        Color :
+            rgb: root.bar_color
+        Line:
+            width: root.bar_width
+            ellipse: (self.x , self.y, self.width , self.height , 0 ,root.overlap)
+
+    MDLabel:
+        text: root.text
+        font_size : "24sp"
+        pos_hint: {"center_x":.5,"center_y":.5}
+        halign : "center"
+        color :root.text_color
+
+<CircularProgressBarCyan>
+    canvas.before:
+        Color :
+            rgba: root.bar_color + [0.3]
+        Line:
+            width: root.bar_width
+            ellipse: (self.x , self.y, self.width , self.height , 0 ,360)
+
+    canvas.after:
+        Color :
+            rgb: root.bar_color
+        Line:
+            width: root.bar_width
+            ellipse: (self.x , self.y, self.width , self.height , 0 ,root.overlap)
+
+    MDLabel:
+        text: root.text
+        font_size : "24sp"
+        pos_hint: {"center_x":.5,"center_y":.5}
+        halign : "center"
+        color :root.text_color
+
+<CircularProgressBarYellow>
+    canvas.before:
+        Color :
+            rgba: root.bar_color + [0.3]
+        Line:
+            width: root.bar_width
+            ellipse: (self.x , self.y, self.width , self.height , 0 ,360)
+
+    canvas.after:
+        Color :
+            rgb: root.bar_color
+        Line:
+            width: root.bar_width
+            ellipse: (self.x , self.y, self.width , self.height , 0 ,root.overlap)
+
+    MDLabel:
+        text: root.text
+        font_size : "24sp"
+        pos_hint: {"center_x":.5,"center_y":.5}
+        halign : "center"
+        color :root.text_color
+
+<CircularProgressBarBlack1>
+    canvas.before:
+        Color :
+            rgba: root.bar_color + [0.3]
+        Line:
+            width: root.bar_width
+            ellipse: (self.x , self.y, self.width , self.height , 0 ,360)
+
+    canvas.after:
+        Color :
+            rgb: root.bar_color
+        Line:
+            width: root.bar_width
+            ellipse: (self.x , self.y, self.width , self.height , 0 ,root.overlap)
+
+    MDLabel:
+        text: root.text
+        font_size : "24sp"
+        pos_hint: {"center_x":.5,"center_y":.5}
+        halign : "center"
+        color :root.text_color
+
+<CircularProgressBarBlack2>
+    canvas.before:
+        Color :
+            rgba: root.bar_color + [0.3]
+        Line:
+            width: root.bar_width
+            ellipse: (self.x , self.y, self.width , self.height , 0 ,360)
+
+    canvas.after:
+        Color :
+            rgb: root.bar_color
+        Line:
+            width: root.bar_width
+            ellipse: (self.x , self.y, self.width , self.height , 0 ,root.overlap)
+
+    MDLabel:
+        text: root.text
+        font_size : "24sp"
+        pos_hint: {"center_x":.5,"center_y":.5}
+        halign : "center"
+        color :root.text_color
+
+<CircularProgressBarPhotoBlack>
+    canvas.before:
+        Color :
+            rgba: root.bar_color + [0.3]
+        Line:
+            width: root.bar_width
+            ellipse: (self.x , self.y, self.width , self.height , 0 ,360)
+
+    canvas.after:
+        Color :
+            rgb: root.bar_color
+        Line:
+            width: root.bar_width
+            ellipse: (self.x , self.y, self.width , self.height , 0 ,root.overlap)
+
+    MDLabel:
+        text: root.text
+        font_size : "24sp"
+        pos_hint: {"center_x":.5,"center_y":.5}
+        halign : "center"
+        color :root.text_color
+
+<BackGroundImage@FloatLayout>
+    canvas:
+        Rectangle:
+            source: "img/logo.png"
+            size: self.width*0.8 , self.height*0.8
+            pos : self.pos
+
+
+<PasswordTextFieldButton>:
+    MDTextField:
+        id: text_field
+        hint_text: root.hint_text
+        text: root.text
+        password: True
+        mode : 'round'
+        write_tab :False
+    MDIconButton:
+        icon : 'eye-off'
+        pos_hint : {'center_y':0.18 ,'center_x':0.90}
+        theme_text_color: "Hint"
+        on_release:
+            self.icon = "eye" if self.icon == "eye-off" else "eye-off"
+            text_field.password = False if text_field.password is True else True

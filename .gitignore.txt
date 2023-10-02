@@ -1,0 +1,12 @@
+
+#Ignore directories
+/.idea
+/log
+/build
+/dist
+
+#Ignore .exe file
+*.exe
+.exe
+
+.txt

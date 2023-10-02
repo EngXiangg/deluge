@@ -1,0 +1,24 @@
+[INFO   ] Logger: Record log in C:\Users\AeSurface3\deluge/log\kivy_23-10-02_35.txt
+[INFO   ] Factory: 190 symbols loaded
+[INFO   ] ImageLoaderFFPy: Using ffpyplayer 4.5.0
+[INFO   ] Image: Providers: img_tex, img_dds, img_sdl2, img_pil, img_ffpyplayer 
+[INFO   ] Text: Provider: sdl2
+[INFO   ] Window: Provider: sdl2
+[INFO   ] GL: Using the "OpenGL" graphics system
+[INFO   ] GL: GLEW initialization succeeded
+[INFO   ] GL: Backend used <glew>
+[INFO   ] GL: OpenGL version <b'4.6.0 - Build 27.20.100.9621'>
+[INFO   ] GL: OpenGL vendor <b'Intel'>
+[INFO   ] GL: OpenGL renderer <b'Intel(R) Iris(R) Plus Graphics'>
+[INFO   ] GL: OpenGL parsed version: 4, 6
+[INFO   ] GL: Shading version <b'4.60 - Build 27.20.100.9621'>
+[INFO   ] GL: Texture max size <16384>
+[INFO   ] GL: Texture max units <32>
+[INFO   ] Window: auto add sdl2 input provider
+[INFO   ] Window: virtual keyboard not allowed, single mode, not docked
+[INFO   ] KivyMD: 1.1.1, git-Unknown, 2023-09-15 (installed at "C:\Users\AeSurface3\AppData\Local\Programs\Python\Python39\lib\site-packages\kivymd\__init__.py")
+[INFO   ] creating snap7 client
+[INFO   ] VideoGstplayer: Using Gstreamer 1.18.5.0
+[INFO   ] Video: Provider: gstplayer
+[INFO   ] GL: NPOT texture support is available
+[INFO   ] Base: Start application main loop

@@ -1,0 +1,16 @@
+# Default ignored files
+/shelf/
+/workspace.xml
+/misc.xml
+/epson_motor.iml
+
+
+#Ignore directories
+
+/log
+/build
+/dist
+
+#Ignore .exe file
+*.exe
+.exe

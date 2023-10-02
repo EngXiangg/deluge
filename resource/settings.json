@@ -1,0 +1,70 @@
+[
+    {
+        "type" : "title",
+        "title" : "**All settings are saved automatically"
+    },
+    {
+        "type": "string",
+        "title": "Robot IP Address",
+        "desc": "Enter robot IP address",
+        "section": "config",
+        "key": "Robot IP"
+    },
+    {
+        "type": "string",
+        "title": "Motor Controller Port",
+        "desc": "Enter port number for motor controller (eg. COM5)",
+        "section": "config",
+        "key": "Motor Controller Port"
+    },
+    {
+        "type": "string",
+        "title": "IO Controller Port",
+        "desc": "Enter port number for IO controller (eg. COM4)",
+        "section": "config",
+        "key": "IO Controller Port"
+    },
+    {
+        "type": "string",
+        "title": "Input Controller IP",
+        "desc": "Enter Reader IP address ",
+        "section": "config",
+        "key": "Input Controller IP"
+    },
+    {
+        "type": "title",
+        "title": "Operation Setting"
+    },
+    {
+        "type": "title",
+        "title": "User Preferences"
+    },
+    {
+        "type": "options",
+        "title": "Theme Color",
+        "desc": "Set GUI theme color",
+        "section": "config",
+        "key": "Theme Color",
+        "options" : ["LightBlue", "Cyan", "Teal", "Green", "LightGreen","Brown", "Gray", "BlueGray"]
+    },
+    {
+        "type": "options",
+        "title": "Theme Style",
+        "desc": "Set preferred theme mode",
+        "section": "config",
+        "key": "Theme Style",
+        "options" : ["Dark","Light"]
+    },
+    {
+        "type" : "title",
+        "title" : "Security"
+    },
+    {
+        "type": "string",
+        "title": "Password",
+        "desc": "Set password for protected access",
+        "section": "config",
+        "key": "Password"
+    }
+
+  ]

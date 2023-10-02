@@ -1,0 +1,32 @@
+{% extends "layout.html" %}
+
+{% block title %} Home {% endblock %}
+
+{% block content %}
+
+    <h2>
+        Robot Connection :
+        {% if robot['connected'] %}
+        Connected
+        {% else %}
+        Not Connected
+        {% endif %}
+    </h2>
+    <div>
+        <h2>Robot</h2>
+        <form action="/robot" method="get">
+            <input type="submit" name="navigate" value="More">
+        </form>
+
+    </div>
+        <h2>Thermo</h2>
+        <form action="/thermo" method="get">
+            <input type="submit" name="navigate" value="More">
+        </form>
+
+    <h2>
+        App
+
+    </h2>
+
+{% endblock %}

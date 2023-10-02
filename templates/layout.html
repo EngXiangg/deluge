@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>{% block title %}TOS - Wax Injection{% endblock %}  </title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='customstyle.css') }}" type="text/css">
+    <link rel="stylesheet" href= https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.0/css/all.min.css>
+</head>
+<body>
+<!--    <video id="background-video" autoplay loop muted-->
+<!--           poster="../static/images/logo.png">-->
+<!--      <source src="https://assets.codepen.io/6093409/river.mp4" type="video/mp4">-->
+<!--    </video>-->
+
+    <img src="../static/images/logo.png" width="50" height="50" title="Aetec" alt="This is logo Aetec" />
+
+  <h1> TOS - Wax Injection </h1>
+    <div class="topnav">
+
+<!--    Notes : refers https://www.angularjswiki.com/fontawesome/   icons link-->
+<!--    fas = font-awesome solid icon , far = font-awesome regular icon , fab = font-awesome brand icon -->
+        <a role="navigation"  href="/home" > <i class="fas fa-home"></i> Home</a>
+        <a role="navigation" href="/robot"> <i class="fas fa-robot"></i> Robot</a>
+        <a role="navigation" href="/thermo"> <i class="fas fa-temperature-full"></i>Thermo</a>
+<!--        <a role="navigation" href="#about"><i class="far fa-bell"></i> About</a>-->
+    </div>
+
+    <div >
+          {% block content %}
+          {% endblock %}
+
+      <form action="/main">
+      <a><button class="button1">
+        back to main
+      </button></a>
+
+      </form>
+    </div>
+
+</body>
+
+<footer> @Copy Right </footer>
+</html>
+

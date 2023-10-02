@@ -1,0 +1,14 @@
+{% extends "layout.html" %}
+{% block title %}App Status{% endblock %}
+
+{% block content %}
+    <h2>Main App</h2>
+    <form action="/" method="get">
+        <input type="submit" name="navigate" value="Back">
+    </form>
+    {% for i in robot %}
+    <div>
+        <p>{{i}} : {{robot[i]}} </p>
+    </div>
+    {% endfor %}
+{% endblock %}
