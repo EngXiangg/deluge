@@ -2,7 +2,7 @@ import threading
 
 from kivy.graphics import Rectangle, Color, Line
 from kivymd.uix.dialog import MDDialog
-from kivymd.uix.button import MDRaisedButton, MDFlatButton, MDRoundFlatIconButton
+from kivymd.uix.button import MDRaisedButton, MDFlatButton, MDRoundFlatIconButton,MDIconButton
 from kivymd.uix.textfield import MDTextField
 from kivymd.uix.selectioncontrol import MDCheckbox
 from kivymd.uix.selection import MDSelectionList
@@ -16,8 +16,9 @@ from kivymd.uix.card import MDCard, MDSeparator
 from kivymd.uix.textfield import MDTextField
 from kivymd.uix.menu import MDDropdownMenu
 from kivymd.uix.dropdownitem import MDDropDownItem
+from kivymd.uix.scrollview import MDScrollView
 from kivymd.uix.tab import MDTabs
-from kivymd.uix.list import OneLineListItem
+from kivymd.uix.list import OneLineListItem,OneLineIconListItem,MDList,IconRightWidget
 from kivy.uix.image import Image
 from kivy.uix.scrollview import ScrollView
 from kivy.metrics import dp
@@ -2404,5 +2405,69 @@ class DataTableDialog(MDDialog):
     def clear_row(self):
         for i in range(len(self.data_table.row_data)):
             self.data_table.remove_row(self.data_table.row_data[-1])
+
+class RestockDialog(MDDialog):
+    def __init__(self ,socketid,*args, **kwargs):
+        self.stocks = ['a','b','c','d','e','f','g','h','i']
+        self.title = 'Stock Alert'
+        self.type = 'custom'
+        self.socketid = socketid
+        self.content_cls = self.create()
+        # self.buttons = [MDRaisedButton(text='Save', on_release=self.yes)]
+        super(RestockDialog, self).__init__()
+
+    def create(self):
+        color = get_color_from_hex('#FF2F15')
+        color2 = get_color_from_hex('#6CD16F')
+        outbox = MDBoxLayout(orientation='horizontal', spacing=12, padding=6, size_hint_y=None, height="180sp")
+        boxicon = MDBoxLayout(orientation='horizontal', spacing=8)
+        iconbutton = MDIconButton(icon="alert",icon_size="120sp",pos_hint={"center_x": .5, "center_y": .5},theme_icon_color="Custom",icon_color=color)
+        box2 = MDBoxLayout(orientation='vertical', spacing=8)
+        label1 = MDLabel(text=f'Please top up socket,socket id ={self.socketid}',markup=True)
+        self.mdlist = MDList()
+        view = MDScrollView(self.mdlist)
+
+        for i in range(len(self.stocks)):
+            item = OneLineIconListItem(IconRightWidget(icon='check-circle'),text=f'{self.stocks[i]}')
+            # item = OneLineListItem(text=f'{self.stocks[i]}')
+            self.mdlist.add_widget(item)
+
+        # self.menu = MDDropdownMenu()
+        # self.stock_dropdown = MDDropDownItem(on_release=self.open_menu, size_hint_x=None, pos_hint={'center_y': 0.5}, )
+        #
+        # titles = [i for i in self.stocks]
+        # menu_items = [
+        #     {
+        #         "text": f"{titles[i]}",
+        #         "icon": "check-circle",
+        #         "icon_color" : color2,
+        #         "viewclass": "IconListItem",
+        #         "on_release": lambda x=f"{titles[i]}": self.menu_callback(x),
+        #     } for i in range(len(titles))
+        # ]
+        #
+        # # alpha-x-circle
+        # self.menu.caller = self.stock_dropdown
+        # self.menu.items = menu_items
+        # self.menu.width_mult = 4
+        # self.menu.max_height = 250
+
+        box2.add_widget(view)
+        boxicon.add_widget(iconbutton)
+        outbox.add_widget(boxicon)
+        outbox.add_widget(box2)
+
+        return outbox
+
+    def open_menu(self, *args):
+        self.menu.open()
+        self.info = None
+
+    def menu_callback(self, text_item, *args):
+        self.stock_dropdown.text = text_item
+        self.menu.dismiss()
+
+    def yes(self, *args):
+        self.dismiss()
 
 get_app()

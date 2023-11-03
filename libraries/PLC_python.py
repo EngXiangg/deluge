@@ -68,9 +68,7 @@ class PLC_Python():
         data = snap7.util.get_int(read, offset)
         return data
 
-    def write_int(self, offset: int, value: int):
-        db = 4
-        max_byte = 104
+    def write_int(self,db: int, max_byte : int, offset: int, value: int):
         array = self.plc.db_read(db, 0, max_byte)
         snap7.util.set_int(array, offset, value)
         self.plc.db_write(db, 0, array)
@@ -92,7 +90,7 @@ class PLC_Python():
         snap7.util.set_real(array, offset, value)
         self.plc.db_write(db, 0, array)
 
-    # TO GET THE SUM OF BIT
+    # CONVERT INT TO USINT , THEN WRITE TO PLC
     def get_bit(self,input,first=True):
         num = [1, 2, 4, 8, 16, 32, 64, 128, 256, 512, 1024, 2048, 4096, 8192, 16384, 32768]
 
@@ -128,6 +126,7 @@ class PLC_Python():
         self.bit_list = []
         self.bit_list2 = []
 
+    # READ USINT DATA FROM PLC , THEN CONVERT TO INT
     def read_usint_data(self,input1, input2, first=True):
         num = [1, 2, 4, 8, 16, 32, 64, 128, 256]
         if input1 <= 255:

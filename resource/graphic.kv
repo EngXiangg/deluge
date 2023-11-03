@@ -247,19 +247,25 @@ MDBoxLayout:
                     pos_hint : {'center_y' : 0.5}
                     on_release : root.open_tabledialog()
                 TooltipMDRoundFlatIconButton:
-                    text : 'reload'
+                    text : 'check'
                     icon : 'update'
                     font_size : 17
                     pos_hint : {'center_y' : 0.5}
-                    on_release : root.restock()
+                    on_release : root.check_stock()
                 MDFillRoundFlatIconButton:
                     icon : 'read'
                     icon_size : '24sp'
-                    text : 'Read PLC'
+                    text : 'Read csv'
                     font_size : 17
                     pos_hint : {'center_y' : 0.5}
-                    on_release : root.read_data()
-
+                    on_release : root.read_file()
+                MDFillRoundFlatIconButton:
+                    icon : 'transfer'
+                    icon_size : '24sp'
+                    text : 'Write recipe'
+                    font_size : 17
+                    pos_hint : {'center_y' : 0.5}
+                    on_release : root.update_plc_recipe_()
 #       # tabs for circular porgress bar layout
         MDTabs:
             tab_hint_x : True
@@ -359,7 +365,7 @@ MDBoxLayout:
                         text : 'Send'
                         font_size : 17
                         pos_hint : {'center_y' : 0.5}
-                        on_release : root.send_data()
+                        on_release : root.update_plc_offset_data()
                 MDBoxLayout:
                     MDBoxLayout:
                         orientation: 'horizontal'
@@ -1577,18 +1583,18 @@ MDBoxLayout:
                         MDBoxLayout:
                             adaptive_height: True
                             CardTitle:
-                                text : 'R1 Suction 1'
+                                text : 'Gripper'
                         MDSeparator:
                         MDBoxLayout:
                             spacing : 8
                             OffButton:
-                                text : 'OFF'
+                                text : 'Release'
                                 size_hint_x : 1.5
-                                on_release: root.suction(1)
+                                on_release: root.gripper(0)
                             MDRaisedButton:
-                                text : 'ON'
+                                text : 'Grip'
                                 size_hint_x : 1.5
-                                on_release: root.suction(0)
+                                on_release: root.gripper(1)
                         MDBoxLayout:
                             spacing : 24
                             MDLabel:
@@ -1596,23 +1602,23 @@ MDBoxLayout:
                                 bold : True
                             SensorLabel :
                                 text : 'NA'
-                                id : suction_s
+                                id : gripper_s
                     IOCard:
                         MDBoxLayout:
                             adaptive_height: True
                             CardTitle:
-                                text : 'R1 Suction 2'
+                                text : 'Welding'
                         MDSeparator:
                         MDBoxLayout:
                             spacing : 8
                             OffButton:
                                 text : 'OFF'
                                 size_hint_x : 1.5
-                                on_release: root.suction2(1)
+                                on_release: root.welding(0)
                             MDRaisedButton:
                                 text : 'ON'
                                 size_hint_x : 1.5
-                                on_release: root.suction2(0)
+                                on_release: root.welding(1)
                         MDBoxLayout:
                             spacing : 24
                             MDLabel:

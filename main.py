@@ -1,6 +1,7 @@
 #  Copyright (c) Aetec Pte Ltd
 import random
 import threading
+import pandas as pd
 
 version = '1.1'
 import multiprocessing
@@ -335,6 +336,7 @@ class OperationScreen(MDScreen):
 
     def on_enter(self):
         self.config = ConfigLoader.load_system_config()
+        self.recipe_parameter()
         Window.bind(on_key_down=self._on_keyboard_down)
 
     def on_leave(self, *args):
@@ -349,6 +351,8 @@ class OperationScreen(MDScreen):
             self.open_tabledialog()
         if keycode == 21: # press 'r'
             self.restock()
+        if keycode == 6:  # press 'c'
+            self.connect_button()
         # else:
         #     print(keycode)
 
@@ -381,18 +385,18 @@ class OperationScreen(MDScreen):
         # if self.selected_recipe == '':
         #     RecipeSelection(self.motor_config,self.update_recipe).open()
         # else:
-        StartDialog(self.start_confirm).open()
-
+        # StartDialog(self.start_confirm).open()
+        self.start_confirm()
     @plc_connected
     def stop_button(self):
         self.selected_recipe = ''
-        self.update_db(0)
+        self.update_plc_status(0)
         self.update_log('stop')
 
     def start_confirm(self):
         # read this status from operation script
         self.update_start(0)
-        self.update_db(2)
+        self.update_plc_status(4)
         self.update_log("Starting operation...")
 
     def check_stop(self):
@@ -454,8 +458,11 @@ class OperationScreen(MDScreen):
         self.ids.black2.counter = max
         self.ids.photoblack.counter = max
 
+    def check_stock(self,):
+        RestockDialog(socketid=12321).open()
+
     @plc_connected
-    def send_data(self,*args):
+    def update_plc_offset_data(self,*args):
         start = time.time()
         temp_xoff = int(self.ids.x_off_field.text)
         temp_yoff = int(self.ids.y_off_field.text)
@@ -476,12 +483,14 @@ class OperationScreen(MDScreen):
                         f'db4 int5 = {self.z_bit2}')
 
         if self.ids.x_off_field.text != '' and self.ids.y_off_field.text != '' and self.ids.z_off_field.text != '':
-            plc_python.write_int(2,self.x_bit1)
-            plc_python.write_int(4,self.x_bit2)
-            plc_python.write_int(6,self.y_bit1)
-            plc_python.write_int(8,self.y_bit2)
-            plc_python.write_int(10,self.z_bit1)
-            plc_python.write_int(12,self.z_bit2)
+            db = 4
+            max_byte = 100
+            plc_python.write_int(db,max_byte,0,self.x_bit1)
+            plc_python.write_int(db,max_byte,2,self.x_bit2)
+            plc_python.write_int(db,max_byte,4,self.y_bit1)
+            plc_python.write_int(db,max_byte,6,self.y_bit2)
+            plc_python.write_int(db,max_byte,8,self.z_bit1)
+            plc_python.write_int(db,max_byte,10,self.z_bit2)
             time_taken = time.time() - start
             print(time_taken)
         else:
@@ -511,13 +520,24 @@ class OperationScreen(MDScreen):
         self.pipe_diameter= 200
         self.nominal = 8
         self.outer_diameter = 8.63
+        self.thickness = self.outer_diameter - self.nominal
         self.pipe_length = 236.2
-        self.groove_start = True
-        self.groove_end = True
+        self.groove_start = 1
+        self.groove_end = 1
         self.cut_orientation = 0
         self.cut_distance = 25.45
-        self.socket_id = '730TX30151'
+        self.outletID = '730TX30151'
         self.hole_size = 2
+
+    def read_file(self):
+        # pd.options.display.max_rows = 105
+        path_ = 'libraries/xyz_data.csv'
+        df = pd.read_csv(path_)
+        print(df)
+
+        cell_data = df.iloc[20,2]
+        print(cell_data)
+
 
     def update_status(self,val):
         if val:
@@ -527,42 +547,45 @@ class OperationScreen(MDScreen):
             self.ids.system_status.text = 'Not Ready'
             self.ids.system_status.text_color = self.theme.error_color
 
-    def update_db(self,num):
-        plc_python.write_int(102,num)
-        self.update_log('Datablock Updated')
+    @plc_connected
+    def update_plc_recipe_(self):
+        db = 7
+        max_byte = 24
+        param_list = [self.quantity,self.pipe_diameter,self.nominal,self.outer_diameter,
+                      self.thickness,self.pipe_length,self.groove_start,self.groove_end,self.cut_orientation,
+                      self.cut_distance,self.socket_id,self.hole_size]
+        for i in range (12):
+            plc_python.write_int(db, max_byte, i*2, param_list[i])
+
+    def update_plc_status(self,num):
+        db = 4
+        max_byte = 100
+        plc_python.write_int(db,max_byte,102,num)
+        # self.update_log('Datablock Updated')
 
     def update_start(self, val):
         color = get_color_from_hex('#00aa00')
         self.ids.start_button.icon = "play-circle-outline"
+        color = self.theme.accent_color
 
-        # if val == 0:
-        #     # operation paused
-        #     if robot.program_running:
-        #         # update to resume, operation is paused
-        #         self.ids.start_label.text = 'Resume'
-        #         self.ids.operation_status.text = 'Paused'
-        #         self.ids.operation_status.text_color = self.app.theme_cls.accent_color
-        #     else:
-        #         self.ids.start_label.text = 'Start'
-        #         self.ids.operation_status.text = 'Idle'
-        #         self.ids.operation_status.text_color = self.app.theme_cls.text_color
-        # elif val == 1:
-        #     if robot.program_running and not robot.program_paused:
-        #         self.ids.start_label.text = 'Start'
-        #     else:
-        #         # update to pause, operation is running
-        #         color = self.theme.accent_color
-        #         self.ids.start_label.text = 'Pause'
-        #         self.ids.start_button.icon = "pause-circle-outline"
-        #         self.ids.operation_status.text = 'Running'
-        #         self.ids.operation_status.text_color = self.app.theme_cls.primary_color
-        # elif val == 2:
-        #     self.ids.start_label.text = 'New Cycle'
-        #     self.ids.operation_status.text = 'Idle'
-        #     self.ids.operation_status.text_color = self.app.theme_cls.text_color
-        #
-        # self.ids.start_label.text_color = color
-        # self.ids.start_button.icon_color = color
+        if val == 0:
+            self.ids.start_label.text = 'Start'
+            self.ids.operation_status.text = 'Idle'
+            self.ids.operation_status.text_color = self.app.theme_cls.text_color
+
+        if val == 1:
+            self.ids.start_label.text = 'Pause'
+            self.ids.start_button.icon = "pause-circle-outline"
+            self.ids.operation_status.text = 'Running'
+            self.ids.operation_status.text_color = self.app.theme_cls.primary_color
+
+        if val == 2:
+            self.ids.start_label.text = 'Resume'
+            self.ids.operation_status.text = 'Paused'
+            self.ids.operation_status.text_color = self.app.theme_cls.accent_color
+
+        self.ids.start_label.text_color = color
+        self.ids.start_button.icon_color = color
 
     def update_recipe(self,recipe=None):
         if recipe is not None:
@@ -587,6 +610,14 @@ class IOScreen(MDScreen):
     def update_color(self, item, color):
         if item.text_color != color:
             item.text_color = color
+
+    def gripper(self,val):
+        db = 4
+        max_byte = 100
+        if val == 1:
+            plc_python.write_int(db,max_byte,98,2)
+        if val == 0:
+            plc_python.write_int(db,max_byte,98,0)
 
 
 class TuningScreen(MDScreen):

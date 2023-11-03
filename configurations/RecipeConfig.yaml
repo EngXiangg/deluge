@@ -1,0 +1,282 @@
+Pipe:
+  EN10217-1:
+    1 inch:
+      Outer Diameter: 33.7
+      Inner Diameter: 28.5
+      Wall Thickness: 2.6
+      Finish : 'Black'
+    1 1/4inch:
+      Outer Diameter: 42.4
+      Inner Diameter: 37.2
+      Wall Thickness: 2.6
+      Finish: 'Black'
+    1 1/2inch:
+      Outer Diameter: 48.3
+        Inner Diameter: 42.5
+        Wall Thickness: 2.9
+        Finish: 'Black'
+    2 inch:
+      Outer Diameter: 60.3
+        Inner Diameter: 54.5
+        Wall Thickness: 2.9
+        Finish: 'Black'
+    2 1/2inch:
+      Outer Diameter: 76.1
+        Inner Diameter: 69.7
+        Wall Thickness: 3.2
+        Finish: 'Black'
+    3 inch:
+      Outer Diameter: 88.9
+        Inner Diameter: 82.5
+        Wall Thickness: 3.2
+        Finish: 'Black'
+    4 inch:
+      Outer Diameter: 114.3
+        Inner Diameter: 107.1
+        Wall Thickness: 3.6
+        Finish: 'Black'
+    6 inch:
+      Outer Diameter: 168.3
+        Inner Diameter: 159.3
+        Wall Thickness: 4.5
+        Finish: 'Black'
+    8 inch:
+      Outer Diameter: 219.1
+        Inner Diameter: 210.1
+        Wall Thickness: 4.5
+        Finish: 'Black'
+    10 inch:
+      Outer Diameter: 273.0
+        Inner Diameter: 263.0
+        Wall Thickness: 5.0
+        Finish: 'Black'
+
+  ASTM 53 GRADE B SCH 40:
+    1 inch:
+      Outer Diameter: 33.4
+      Inner Diameter: 26.6
+      Wall Thickness: 3.38
+      Finish: 'Black'
+    1 1/4inch:
+      Outer Diameter: 42.2
+      Inner Diameter: 35.1
+      Wall Thickness: 3.56
+      Finish: 'Black'
+    1 1/2inch:
+      Outer Diameter: 48.3
+        Inner Diameter: 40.9
+        Wall Thickness: 3.68
+        Finish: 'Black'
+    2 inch:
+      Outer Diameter: 60.3
+        Inner Diameter: 52.5
+        Wall Thickness: 3.91
+        Finish: 'Black'
+    2 1/2inch:
+      Outer Diameter: 73.0
+        Inner Diameter: 62.7
+        Wall Thickness: 5.16
+        Finish: 'Black'
+    3 inch:
+      Outer Diameter: 88.9
+        Inner Diameter: 77.9
+        Wall Thickness: 5.49
+        Finish: 'Black'
+    4 inch:
+      Outer Diameter: 114.3
+        Inner Diameter: 102.3
+        Wall Thickness: 6.02
+        Finish: 'Black'
+    6 inch:
+      Outer Diameter: 168.3
+        Inner Diameter: 154.1
+        Wall Thickness: 7.11
+        Finish: 'Black'
+    8 inch:
+      Outer Diameter: 219.1
+        Inner Diameter: 202.7
+        Wall Thickness: 8.18
+        Finish: 'Black'
+    10 inch:
+      Outer Diameter: 273.0
+        Inner Diameter: 254.5
+        Wall Thickness: 9.27
+        Finish: 'Black'
+
+  EN10255 - Medium:
+    1 inch:
+      Outer Diameter: 33.7
+      Inner Diameter: 27.3
+      Wall Thickness: 3.2
+      Finish: 'Black'
+    1 1/4inch:
+      Outer Diameter: 42.2
+      Inner Diameter: 35.8
+      Wall Thickness: 3.2
+      Finish: 'Black'
+    1 1/2inch:
+      Outer Diameter: 48.3
+        Inner Diameter: 41.9
+        Wall Thickness: 3.2
+        Finish: 'Black'
+    2 inch:
+      Outer Diameter: 60.3
+        Inner Diameter: 53.1
+        Wall Thickness: 3.6
+        Finish: 'Black'
+    2 1/2inch:
+      Outer Diameter: 76.1
+        Inner Diameter: 68.9
+        Wall Thickness: 3.6
+        Finish: 'Black'
+    3 inch:
+      Outer Diameter: 88.9
+        Inner Diameter: 80.9
+        Wall Thickness: 4.0
+        Finish: 'Black'
+    4 inch:
+      Outer Diameter: 114.3
+        Inner Diameter: 105.3
+        Wall Thickness: 4.5
+        Finish: 'Black'
+    6 inch:
+      Outer Diameter: 165.1
+        Inner Diameter: 155.1
+        Wall Thickness: 5.0
+        Finish: 'Black'
+
+  EN10255 - Heavy:
+    1 inch:
+      Outer Diameter: 33.7
+      Inner Diameter: 25.7
+      Wall Thickness: 4.0
+      Finish: 'Black'
+    1 1/4inch:
+      Outer Diameter: 42.2
+      Inner Diameter: 34.2
+      Wall Thickness: 4.0
+      Finish: 'Black'
+    1 1/2inch:
+      Outer Diameter: 48.3
+        Inner Diameter: 40.3
+        Wall Thickness: 4.0
+        Finish: 'Black'
+    2 inch:
+      Outer Diameter: 60.3
+        Inner Diameter: 51.3
+        Wall Thickness: 4.5
+        Finish: 'Black'
+    2 1/2inch:
+      Outer Diameter: 76.1
+        Inner Diameter: 67.1
+        Wall Thickness: 4.5
+        Finish: 'Black'
+    3 inch:
+      Outer Diameter: 88.9
+        Inner Diameter: 78.9
+        Wall Thickness: 5.0
+        Finish: 'Black'
+    4 inch:
+      Outer Diameter: 114.3
+        Inner Diameter: 103.5
+        Wall Thickness: 5.4
+        Finish: 'Black'
+    6 inch:
+      Outer Diameter: 165.1
+        Inner Diameter: 154.3
+        Wall Thickness: 5.4
+        Finish: 'Black'
+
+  JIS G3452:
+    8 inch:
+      Outer Diameter: 216.3
+        Inner Diameter: 204.7
+        Wall Thickness: 5.8
+        Finish: 'Black'
+      10 inch:
+        Outer Diameter: 267.4
+          Inner Diameter: 254.2
+          Wall Thickness: 6.6
+          Finish: 'Black'
+
+Thread Socket:
+  Thread Outlet Curve Diameter:
+    1 inch: 33.7
+    1 1/4inch: 42.2
+    1 1/2inch: 48.3
+    2 inch: 60.3
+    2 1/2 inch: 76.0
+    3 inch: 88.9
+    4 inch: 114.3
+    6 inch: 165.1
+    8 inch: 219.1
+  Thread Outlet 1/2 inch:
+    socket diameter: 27.5
+    socket height: 27.0
+
+  Thread Outlet 3/4 inch:
+    socket diameter: 33.8
+    socket height: 28.6
+
+  Thread Outlet 1 inch:
+    socket diameter: 39.5
+    socket height: 31.7
+
+  Thread Outlet 1 1/4 inch:
+    socket diameter: 47.5
+    socket height: 34.9
+
+  Thread Outlet 1 1/2inch:
+    socket diameter: 55
+    socket height: 41.3
+
+  Thread Outlet 2 inch:
+    socket diameter: 69.2
+    socket height: 44.5
+
+Grooved Socket:
+  Grooved Outlet Curve Diameter:
+    1 1/2inch: 48.3
+    2 inch: 60.3
+    2 1/2 inch: 76.0
+    3 inch: 88.9
+    4 inch: 114.3
+    6 inch: 168.3
+    8 inch: 219.1
+    10 inch: 273
+
+  Grooved Outlet 1 1/4 inch:
+    socket diameter: 42.2
+    socket height: 75.4
+
+  Grooved Outlet 1 1/2 inch:
+    socket diameter: 48.3
+    socket height: 75.4
+
+  Grooved Outlet 2 inch:
+    socket diameter: 60.3
+    socket height: 75.4
+
+  Grooved Outlet 2 1/2 inch(OD76):
+    socket diameter: 76.1
+    socket height: 75.4
+
+  Grooved Outlet 2 1/2 inch(OD73):
+    socket diameter: 73.0
+    socket height: 75.4
+
+  Grooved Outlet 3 inch:
+    socket diameter: 88.9
+    socket height: 75.4
+
+  Grooved Outlet 4 inch:
+    socket diameter: 114.3
+    socket height: 101
+
+  Grooved Outlet 6 inch(OD168):
+    socket diameter: 168.3
+    socket height: 101
+
+  Grooved Outlet 6 inch(OD165):
+    socket diameter: 165.3
+    socket height: 101
